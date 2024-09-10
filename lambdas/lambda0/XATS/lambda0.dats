@@ -38,16 +38,18 @@ Tue 10 Sep 2024 01:39:29 PM EDT
 //
 (* ****** ****** *)
 (* ****** ****** *)
+#typedef tvar = strn
+(* ****** ****** *)
 //
 datatype term =
-| TMvar of strn
-| TMlam of (strn, term)
-| TMapp of (term, term)
+|
+TMvar of tvar
+|
+TMlam of (tvar, term)
+|
+TMapp of (term, term)
 //
 (* ****** ****** *)
-val xx = TMapp("x", TMvar"x")
-(* ****** ****** *)
-////
 (* ****** ****** *)
 //
 #impltmp
@@ -142,6 +144,35 @@ val () = prints("K1 = ", K1, "\n")
 val () = prints("omega = ", omega, "\n")
 val () = prints("Omega = ", Omega, "\n")
 val () = prints("Y = ", Y, "\n")
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+fun
+term_subst
+(tm0: term
+,x00: tvar, sub: term): term =
+(
+case+ tm0 of
+|
+TMvar(x01) =>
+if
+(x00=x01)
+then sub else tm0
+|
+TMlam(x01, tm1) =>
+if
+(x00=x01)
+then tm0
+else TMlam(x01, subst(tm1))
+|
+TMapp(tm1, tm2) =>
+TMapp(subst(tm1), subst(tm2))
+) where
+{
+fun
+subst(tmx) = term_subst(tmx, x00, sub)
+}
 //
 (* ****** ****** *)
 (* ****** ****** *)
