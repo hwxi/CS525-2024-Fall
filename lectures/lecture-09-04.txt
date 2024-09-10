@@ -1,0 +1,12 @@
+HX-2024-09-04:
+
+Welcome to CS525, Fall, 2024.
+
+Here is a more "sexy" title :)
+
+From Church to Turing:
+A Computational Odyssey through Syntax and Semantics
+
+Church's lambda-calculus:
+
+lambda-terms: variable (name), abstraction, and application

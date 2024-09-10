@@ -1,0 +1,18 @@
+############################################################
+HX-2024-09-09:
+############################################################
+lambda-terms:
+variable (name), abstraction, and application
+############################################################
+Some basic concepts in lambda-calculus:
+free/bound variables
+a closed term is one containing no free variables
+beta-redex: (lambda x.t1)(t2)
+contractum of (lambda x.t1)(t2) is t1[x->t2]
+beta-reduction: reducing a beta-redex to its contractum
+############################################################
+In programming language design, there is often no "right" or
+"wrong"; one often does not realize that a fateful mistake is
+made until a long time (e.g., several years) later. This makes
+language design more like art than science!
+############################################################
