@@ -177,6 +177,66 @@ subst(tmx) = term_subst(tmx, x00, sub)
 (* ****** ****** *)
 (* ****** ****** *)
 //
+fun
+term_beta$reduce
+( tm1: term
+, tm2: term): term =
+let
+val-TMlam(x00, tma) = tm1
+in//let
+  term_subst(tma, x00, tm2)
+end//end
+//
+(* ****** ****** *)
+//
+fun
+term_evaluate
+(tm0: term): term =
+(
+case+ tm0 of
+//
+|TMvar _ => tm0
+|TMlam _ => tm0
+//
+|
+TMapp(tm1, tm2) =>
+let
+val
+tm1 = term_evaluate(tm1)
+in//let
+case+ tm1 of
+|
+TMlam _ =>
+term_evaluate
+(term_beta$reduce(tm1, tm2))
+|
+_(*non-TMlam*) =>
+TMapp(tm1, term_evaluate(tm2))
+end//let
+) where
+{
+(*
+val () = prints
+("term_evaluate: tm0 = ", tm0, "\n")
+*)
+}
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+val () =
+let
+val x = TMvar"x"
+val SKKx =
+TMapp(TMapp(TMapp(S, K), K), x)
+in//let
+prints
+("SKKx = ", term_evaluate(SKKx), "\n")
+end//let
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
 (*
 val () = console_log(the_print_store_flush())
 *)
