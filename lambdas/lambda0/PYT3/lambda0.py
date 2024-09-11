@@ -120,5 +120,5 @@ def SKKx():
 print("evaluate(SKKx) =", term_evaluate(SKKx()))
 #
 ############################################################
+# end of [HWXI/CS525-2024-Fall/lambdas_lambda0_PYT3_lambda0.py]
 ############################################################
-
