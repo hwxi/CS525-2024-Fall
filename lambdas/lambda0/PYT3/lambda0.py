@@ -15,8 +15,6 @@ TM0app = 2
 #
 class term:
     ctag = -1
-    def get_ctag(self):
-        return self.ctag
 # end-of-class(term)
 #
 class term_var(term):
@@ -73,7 +71,9 @@ _ = print("K =", K_())
 _ = print("S =", S_())
 #
 ############################################################
-
+#
+# HX: [sub] should be closed!
+#
 def term_subst(tm0, x00, sub):
     def subst(tm0):
         return term_subst(tm0, x00, sub)

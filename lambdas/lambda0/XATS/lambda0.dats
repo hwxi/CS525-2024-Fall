@@ -39,16 +39,27 @@ Tue 10 Sep 2024 01:39:29 PM EDT
 (* ****** ****** *)
 (* ****** ****** *)
 #typedef tvar = strn
+#typedef topr = strn
 (* ****** ****** *)
 //
 datatype term =
-|
-TMvar of tvar
-|
-TMlam of (tvar, term)
-|
-TMapp of (term, term)
 //
+|TMint of sint
+//
+|TMvar of tvar
+|TMlam of (tvar, term)
+|TMapp of (term, term)
+//
+|TMopr of (topr, list(term))
+//
+#typedef termlst = list(term)
+//
+(* ****** ****** *)
+(* ****** ****** *)
+(*
+#symload nil with list_nil
+#symload cons with list_cons
+*)
 (* ****** ****** *)
 (* ****** ****** *)
 //
@@ -69,6 +80,9 @@ in//let
 //
 case+ tm0 of
 |
+TMint(i00) =>
+prints("TMint(", i00, ")")
+|
 TMvar(x00) =>
 prints("TMvar(", x00, ")")
 |
@@ -77,6 +91,10 @@ prints("TMlam(", x00, ", ", tm1, ")")
 |
 TMapp(tm1, tm2) =>
 prints("TMapp(", tm1, ", ", tm2, ")")
+//
+|
+TMopr(opr, tms) =>
+prints("TMopr(", opr, ", ", tms, ")")
 //
 end//let
 }(*where*)//end-of-[g_print<term>(tm0)]
@@ -155,6 +173,8 @@ term_subst
 (
 case+ tm0 of
 |
+TMint _ => tm0
+|
 TMvar(x01) =>
 if
 (x00=x01)
@@ -163,11 +183,15 @@ then sub else tm0
 TMlam(x01, tm1) =>
 if
 (x00=x01)
-then tm0
+then (tm0)
 else TMlam(x01, subst(tm1))
 |
 TMapp(tm1, tm2) =>
 TMapp(subst(tm1), subst(tm2))
+//
+|
+TMopr(opr, tms) =>
+TMopr(opr, list_map(tms, subst))
 ) where
 {
 fun
@@ -195,6 +219,7 @@ term_evaluate
 (
 case+ tm0 of
 //
+|TMint _ => tm0
 |TMvar _ => tm0
 |TMlam _ => tm0
 //
@@ -213,6 +238,16 @@ term_evaluate
 _(*non-TMlam*) =>
 TMapp(tm1, term_evaluate(tm2))
 end//let
+//
+|
+TMopr(opr, tms) =>
+let
+val tms =
+list_map(tms, term_evaluate)
+in//let
+  term$opr_evaluate(opr, tms)
+end//end
+//
 ) where
 {
 (*
@@ -220,6 +255,67 @@ val () = prints
 ("term_evaluate: tm0 = ", tm0, "\n")
 *)
 }
+//
+and
+term$opr_evaluate
+(opr: topr, tms: termlst) =
+(
+case- opr of
+//
+| "+" =>
+(
+let
+val-
+list_cons
+(TMint(i01), tms) = tms
+val-
+list_cons
+(TMint(i02), tms) = tms in TMint(i01+i02)
+end//let
+)
+//
+| "-" =>
+(
+let
+val-
+list_cons
+(TMint(i01), tms) = tms
+val-
+list_cons
+(TMint(i02), tms) = tms in TMint(i01-i02)
+end//let
+)
+//
+| "*" =>
+(
+let
+val-
+list_cons
+(TMint(i01), tms) = tms
+val-
+list_cons
+(TMint(i02), tms) = tms in TMint(i01*i02)
+end//let
+)
+//
+| "/" =>
+(
+let
+val-
+list_cons
+(TMint(i01), tms) = tms
+val-
+list_cons
+(TMint(i02), tms) = tms in TMint(i01/i02)
+end//let
+)
+//
+)(*case+*)//end-of-[term$opr_evaluate(opr,tms)]
+//
+(* ****** ****** *)
+//
+#symload
+evaluate with term_evaluate
 //
 (* ****** ****** *)
 (* ****** ****** *)
@@ -230,9 +326,47 @@ val x = TMvar"x"
 val SKKx =
 TMapp(TMapp(TMapp(S, K), K), x)
 in//let
-prints
-("SKKx = ", term_evaluate(SKKx), "\n")
+prints("SKKx = ", evaluate(SKKx), "\n")
 end//let
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+fun
+TMadd(tm1, tm2) =
+TMopr("+", list@(tm1, tm2))
+fun
+TMsub(tm1, tm2) =
+TMopr("-", list@(tm1, tm2))
+fun
+TMmul(tm1, tm2) =
+TMopr("*", list@(tm1, tm2))
+fun
+TMdiv(tm1, tm2) =
+TMopr("/", list@(tm1, tm2))
+//
+(* ****** ****** *)
+#symload + with TMadd of 1000
+#symload - with TMsub of 1000
+#symload * with TMmul of 1000
+#symload / with TMdiv of 1000
+(* ****** ****** *)
+//
+val () = prints
+("TMint(1)+TMint(2) = "
+,evaluate(TMint(1)+TMint(2)), "\n")
+//
+val () = prints
+("TMint(1)-TMint(2) = "
+,evaluate(TMint(1)-TMint(2)), "\n")
+//
+val () = prints
+("TMint(1)*TMint(2) = "
+,evaluate(TMint(1)*TMint(2)), "\n")
+//
+val () = prints
+("TMint(1)/TMint(2) = "
+,evaluate(TMint(1)/TMint(2)), "\n")
 //
 (* ****** ****** *)
 (* ****** ****** *)
