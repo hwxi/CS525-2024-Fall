@@ -178,7 +178,7 @@ subst(tmx) = term_subst(tmx, x00, sub)
 (* ****** ****** *)
 //
 fun
-term_beta$reduce
+term_beta$red
 ( tm1: term
 , tm2: term): term =
 let
@@ -208,7 +208,7 @@ case+ tm1 of
 |
 TMlam _ =>
 term_evaluate
-(term_beta$reduce(tm1, tm2))
+(term_beta$red(tm1, tm2))
 |
 _(*non-TMlam*) =>
 TMapp(tm1, term_evaluate(tm2))
