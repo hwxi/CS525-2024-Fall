@@ -310,6 +310,18 @@ list_cons
 end//let
 )
 //
+| "%" =>
+(
+let
+val-
+list_cons
+(TMint(i01), tms) = tms
+val-
+list_cons
+(TMint(i02), tms) = tms in TMint(i01%i02)
+end//let
+)
+//
 )(*case+*)//end-of-[term$opr_evaluate(opr,tms)]
 //
 (* ****** ****** *)
@@ -344,12 +356,16 @@ TMopr("*", list@(tm1, tm2))
 fun
 TMdiv(tm1, tm2) =
 TMopr("/", list@(tm1, tm2))
+fun
+TMmod(tm1, tm2) =
+TMopr("%", list@(tm1, tm2))
 //
 (* ****** ****** *)
 #symload + with TMadd of 1000
 #symload - with TMsub of 1000
 #symload * with TMmul of 1000
 #symload / with TMdiv of 1000
+#symload % with TMmod of 1000
 (* ****** ****** *)
 //
 val () = prints
@@ -367,6 +383,10 @@ val () = prints
 val () = prints
 ("TMint(1)/TMint(2) = "
 ,evaluate(TMint(1)/TMint(2)), "\n")
+//
+val () = prints
+("TMint(1)%TMint(2) = "
+,evaluate(TMint(1)%TMint(2)), "\n")
 //
 (* ****** ****** *)
 (* ****** ****** *)
