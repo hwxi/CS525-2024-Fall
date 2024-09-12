@@ -369,24 +369,24 @@ TMopr("%", list@(tm1, tm2))
 (* ****** ****** *)
 //
 val () = prints
-("TMint(1)+TMint(2) = "
-,evaluate(TMint(1)+TMint(2)), "\n")
+("TMint(10)+TMint(20) = "
+,evaluate(TMint(10)+TMint(20)), "\n")
 //
 val () = prints
-("TMint(1)-TMint(2) = "
-,evaluate(TMint(1)-TMint(2)), "\n")
+("TMint(10)-TMint(20) = "
+,evaluate(TMint(10)-TMint(20)), "\n")
 //
 val () = prints
-("TMint(1)*TMint(2) = "
-,evaluate(TMint(1)*TMint(2)), "\n")
+("TMint(10)*TMint(20) = "
+,evaluate(TMint(10)*TMint(20)), "\n")
 //
 val () = prints
-("TMint(1)/TMint(2) = "
-,evaluate(TMint(1)/TMint(2)), "\n")
+("TMint(10)/TMint(20) = "
+,evaluate(TMint(10)/TMint(20)), "\n")
 //
 val () = prints
-("TMint(1)%TMint(2) = "
-,evaluate(TMint(1)%TMint(2)), "\n")
+("TMint(10)%TMint(20) = "
+,evaluate(TMint(10)%TMint(20)), "\n")
 //
 (* ****** ****** *)
 (* ****** ****** *)
