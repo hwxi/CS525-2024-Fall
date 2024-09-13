@@ -520,14 +520,14 @@ TMif0(TMint(1)>TMint(2), TMint(1), TMint(2))
 //
 val TMfact =
 let
-val f = TMvar"f"
-and n = TMvar"n" in
+val xf = TMvar"f"
+and xn = TMvar"n"
+val i0 = TMint(0)
+val i1 = TMint(1) in
 TMapp(Y,
 TMlam("f", TMlam("n",
-TMif0(
-n > TMint(0),
-n * TMapp(f, n-TMint(1)), TMint(1)))))
-end//let//end-of-[TMfact]
+TMif0(xn>i0, xn*TMapp(xf, n-i1),i1))))
+end//let//end-of-[val(TMfact)]
 //
 (* ****** ****** *)
 
