@@ -518,6 +518,27 @@ TMif0(TMint(1)>TMint(2), TMint(1), TMint(2))
 (* ****** ****** *)
 (* ****** ****** *)
 //
+val TMfact =
+let
+val f = TMvar"f"
+and n = TMvar"n" in
+TMapp(Y,
+TMlam("f", TMlam("n",
+TMif0(
+n > TMint(0),
+n * TMapp(f, n-TMint(1)), TMint(1)))))
+end//let//end-of-[TMfact]
+//
+(* ****** ****** *)
+
+val () =
+prints(
+"fact(10) = ",
+evaluate(TMapp(TMfact, TMint(10))), "\n")
+
+(* ****** ****** *)
+(* ****** ****** *)
+//
 (*
 val () = console_log(the_print_store_flush())
 *)
