@@ -130,6 +130,7 @@ print("evaluate(SKKx) =", term_evaluate(SKKx()))
 ############################################################
 #
 # HX-2024-09-12:
+# Points: 10
 # Please first extend lambda0 with TMint and TMopr
 # For instance, some details can be found in the code
 # stored in the directory ./../../lambdas/lambda0/XATS
@@ -138,6 +139,7 @@ print("evaluate(SKKx) =", term_evaluate(SKKx()))
 
 def term_free2vars(tm0):
     """
+    Points: 10
     This function takes a term [tm0] and returns the set of
     free variables in [tm0]. The set returned should be the
     built-in set in Python
@@ -148,6 +150,7 @@ def term_free2vars(tm0):
 
 def term_gsubst(tm0, x00, sub):
     """
+    Points: 20
     This function implements the (general) substitution
     function on terms that should correctly handle an open
     [sub] (that is, [sub] containing free variables)
