@@ -526,7 +526,7 @@ val i0 = TMint(0)
 val i1 = TMint(1) in
 TMapp(Y,
 TMlam("f", TMlam("n",
-TMif0(xn>i0, xn*TMapp(xf, n-i1),i1))))
+TMif0(xn>i0, xn*TMapp(xf, xn-i1),i1))))
 end//let//end-of-[val(TMfact)]
 //
 (* ****** ****** *)
