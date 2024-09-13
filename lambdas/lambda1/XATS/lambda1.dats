@@ -268,11 +268,13 @@ val-
 TMlam
 (x00, tmb) = tma
 in//let
-auxeval(tmb, env) where
+(
+auxeval(tmb, env)) where
 {
 val
-env = list_cons((x00, dv2), env)
-}
+env =
+list_cons((x00, dv2), env) }
+//
 end//let
 |
 DVfix(tma, env) =>
@@ -285,10 +287,11 @@ in//let
 auxeval(tmb, env)) where
 {
 val
-env = list_cons((f00, dv1), env)
+env =
+list_cons((f00, dv1), env)
 val
-env = list_cons((x00, dv2), env)
-}
+env =
+list_cons((x00, dv2), env) }
 end//let
 //
 end//end//end-of-[TMapp(tm1,tm2)]
@@ -545,6 +548,25 @@ end//let//end-of-[TMfact]
 val () = prints(
 "TMfact\\app(TMint(10)) = ",
 term_evaluate(TMfact\app(TMint(10))), "\n")
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+val TMfibo =
+let
+val i1 = TMint 1
+val i2 = TMint 2
+val xf = TMvar"f"
+val xn = TMvar"n"
+in//let
+TMfix("f", "n", 
+TMif0(xn >= i2,
+TMapp(xf, xn-i2)+TMapp(xf, xn-i1), xn))
+end//let//end-of-[TMfibo]
+//
+val () = prints(
+"TMfibo\\app(TMint(10)) = ",
+term_evaluate(TMfibo\app(TMint(10))), "\n")
 //
 (* ****** ****** *)
 (* ****** ****** *)
