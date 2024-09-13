@@ -122,6 +122,433 @@ end//let
 (* ****** ****** *)
 (* ****** ****** *)
 //
+datatype dval =
+//
+| DVint of sint
+| DVbtf of bool
+| DVlam of (term, denv)
+| DVfix of (term, denv)
+//
+where
+{
+#typedef
+denv = list@(tvar, dval)
+}
+//
+#typedef dvalist = list(dval)
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+#impltmp
+g_print
+<dval>(dv0) =
+(
+//
+case+ dv0 of
+|DVint(i00) =>
+prints("DVint(", i00, ")")
+|DVbtf(b00) =>
+prints("DVbtf(", b00, ")")
+|DVlam(tma, env) =>
+prints("DVlam(", "...", ")")
+|DVfix(tma, env) =>
+prints("DVfix(", "...", ")")
+//
+)
+//
+#impltmp
+g_print
+<denv>(denv) =
+let
+val () =
+(
+ prints("DENV("))
+val () =
+GSEQ(denv).iforitm
+(
+lam(i, x) => (
+if i > 0 then pstrn","; print(x)))
+val () = prints(")")
+endlet
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+fun
+denv_search$opt
+( env: denv
+, x00: tvar): optn_vt(dval) =
+(
+let
+val opt =
+strm_vt_head$opt0<kx>
+(
+gseq_filter_lstrm(env))
+in//let
+case+ opt of
+| ~
+optn_vt_nil
+  ((*0*)) => optn_vt_nil()
+| ~
+optn_vt_cons
+  ( kx0 ) => optn_vt_cons(kx0.1)
+end
+) where
+{
+#typedef kx = @(tvar, dval)
+#impltmp
+filter$test<kx>(kx0) = (x00 = kx0.0)
+}
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+fun
+term_evaluate
+(tm0: term): dval =
+(
+  auxeval(tm0, env))
+where
+{
+val env = list_nil()
+//
+fun
+auxeval
+(tm0: term, env: denv): dval =
+(
+case+ tm0 of
+//
+|
+TMint(i00) => DVint(i00)
+|
+TMbtf(b00) => DVbtf(b00)
+//
+|
+TMvar(x00) =>
+let
+//
+val opt =
+denv_search$opt(env, x00)
+//
+val ( ) =
+if
+nilq1(opt)
+then prints(
+"term_evaluate: ",
+"auxeval: tm0 = ", tm0, "\n")
+//
+in//let
+//
+case+
+opt of ~optn_vt_cons(dv0) => dv0
+//
+end//let
+//
+(* ****** ****** *)
+|
+TMlam _ => DVlam(tm0, env)
+|
+TMfix _ => DVfix(tm0, env)
+//
+(* ****** ****** *)
+//
+|
+TMapp(tm1, tm2) =>
+let
+val dv1 = auxeval(tm1, env)
+val dv2 = auxeval(tm2, env)
+in//let
+//
+case- dv1 of
+|
+DVlam(tma, env) =>
+let
+val-
+TMlam
+(x00, tmb) = tma
+in//let
+auxeval(tmb, env) where
+{
+val
+env = list_cons((x00, dv2), env)
+}
+end//let
+|
+DVfix(tma, env) =>
+let
+val-
+TMfix
+(f00, x00, tmb) = tma
+in//let
+(
+auxeval(tmb, env)) where
+{
+val
+env = list_cons((f00, dv1), env)
+val
+env = list_cons((x00, dv2), env)
+}
+end//let
+//
+end//end//end-of-[TMapp(tm1,tm2)]
+//
+|
+TMopr(opr, tms) =>
+(
+term$opr_evaluate(opr, dvs))
+where
+{
+val dvs = list_map_f1un
+(tms, lam(tmx) => auxeval(tmx, env))
+}
+//
+|
+TMif0(tm1, tm2, tm3) =>
+let
+val dv1 = auxeval(tm1, env)
+in//let
+case- dv1 of
+|DVbtf(btf) =>
+(
+ auxeval(ifval(btf, tm2, tm3), env))
+end//let
+//
+)(*case+*)//end-of-[auxeval(tm0,env)]
+//
+}(*where*)//end-of-[term_evaluate(tm0)]
+//
+and
+term$opr_evaluate
+(opr: topr, dvs: dvalist) =
+(
+case+ opr of
+//
+| "+" =>
+let
+val-
+list_cons
+(DVint(i01), dvs) = dvs
+val-
+list_cons
+(DVint(i02), _) = dvs in DVint(i01+i02)
+end//let
+| "-" =>
+let
+val-
+list_cons
+(DVint(i01), dvs) = dvs
+in//let
+(
+case+ dvs of
+| list_nil() => DVint(-i01)
+| list_cons
+( DVint(i02), dvs ) => DVint(i01 - i02))
+end//let
+| "*" =>
+let
+val-
+list_cons
+(DVint(i01), dvs) = dvs
+val-
+list_cons
+(DVint(i02), dvs) = dvs in DVint(i01*i02)
+end//let
+| "/" =>
+let
+val-
+list_cons
+(DVint(i01), dvs) = dvs
+val-
+list_cons
+(DVint(i02), dvs) = dvs in DVint(i01/i02)
+end//let
+| "%" =>
+let
+val-
+list_cons
+(DVint(i01), dvs) = dvs
+val-
+list_cons
+(DVint(i02), dvs) = dvs in DVint(i01%i02)
+end//let
+//
+| "~" =>
+let
+val-
+list_cons
+(DVbtf(b01), dvs) = dvs in DVbtf( ~ b01 )
+end//let
+//
+| "<" =>
+let
+val-
+list_cons
+(DVint(i01), dvs) = dvs
+val-
+list_cons
+(DVint(i02), dvs) = dvs in DVbtf(i01<i02)
+end//let
+| ">" =>
+let
+val-
+list_cons
+(DVint(i01), dvs) = dvs
+val-
+list_cons
+(DVint(i02), dvs) = dvs in DVbtf(i01>i02)
+end//let
+| "=" =>
+let
+val-
+list_cons
+(DVint(i01), dvs) = dvs
+val-
+list_cons
+(DVint(i02), dvs) = dvs in DVbtf(i01=i02)
+end//let
+//
+| "<=" =>
+let
+val-
+list_cons
+(DVint(i01), dvs) = dvs
+val-
+list_cons
+(DVint(i02), dvs) = dvs in DVbtf(i01<=i02)
+end//let
+| ">=" =>
+let
+val-
+list_cons
+(DVint(i01), dvs) = dvs
+val-
+list_cons
+(DVint(i02), dvs) = dvs in DVbtf(i01>=i02)
+end//let
+| "!=" =>
+let
+val-
+list_cons
+(DVint(i01), dvs) = dvs
+val-
+list_cons
+(DVint(i02), dvs) = dvs in DVbtf(i01!=i02)
+end//let
+//
+) where
+{
+(*
+val () =
+prints("term$opr_evaluate: opr = ", opr, "\n")
+val () =
+prints("term$opr_evaluate: dvs = ", dvs, "\n")
+*)
+}(*where+*)//end-of-[term$opr_evaluate(opr,dvs)]
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+fun
+TMadd(tm1, tm2) =
+TMopr("+", list@(tm1, tm2))
+fun
+TMsub(tm1, tm2) =
+TMopr("-", list@(tm1, tm2))
+fun
+TMmul(tm1, tm2) =
+TMopr("*", list@(tm1, tm2))
+fun
+TMdiv(tm1, tm2) =
+TMopr("/", list@(tm1, tm2))
+fun
+TMmod(tm1, tm2) =
+TMopr("%", list@(tm1, tm2))
+//
+(* ****** ****** *)
+#symload + with TMadd of 1000
+#symload - with TMsub of 1000
+#symload * with TMmul of 1000
+#symload / with TMdiv of 1000
+#symload % with TMmod of 1000
+(* ****** ****** *)
+(* ****** ****** *)
+//
+val TMtt0 = TMbtf(true)
+val TMff0 = TMbtf(false)
+//
+fun
+TMneg(tm1) = TMopr("~", tm1)
+fun
+TMand(tm1, tm2) = TMif0(tm1, tm2, TMff0)
+fun
+TMor0(tm1, tm2) = TMif0(tm1, TMtt0, tm2)
+//
+(* ****** ****** *)
+#symload && with TMand of 1000
+#symload || with TMor0 of 1000
+(* ****** ****** *)
+(* ****** ****** *)
+//
+fun
+TMilt(tm1, tm2) =
+TMopr("<", list@(tm1, tm2))
+fun
+TMigt(tm1, tm2) =
+TMopr(">", list@(tm1, tm2))
+fun
+TMieq(tm1, tm2) =
+TMopr("=", list@(tm1, tm2))
+//
+fun
+TMilte(tm1, tm2) =
+TMopr("<=", list@(tm1, tm2))
+fun
+TMigte(tm1, tm2) =
+TMopr(">=", list@(tm1, tm2))
+fun
+TMineq(tm1, tm2) =
+TMopr("!=", list@(tm1, tm2))
+//
+(* ****** ****** *)
+#symload < with TMilt of 1000
+#symload > with TMigt of 1000
+#symload = with TMieq of 1000
+#symload <= with TMilte of 1000
+#symload >= with TMigte of 1000
+#symload != with TMineq of 1000
+(* ****** ****** *)
+(* ****** ****** *)
+//
+val TMsqr =
+let
+val x = TMvar"x" in TMlam("x", x*x)
+end
+//
+val () = prints(
+"TMsqr\\app(TMint(10)) = ",
+term_evaluate(TMsqr\app(TMint(10))), "\n")
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+val TMfact =
+let
+val i1 = TMint 1
+val xf = TMvar"f"
+val xn = TMvar"n"
+in//let
+TMfix("f", "n", 
+TMif0(xn > i1, xn * TMapp(xf, xn-i1), i1))
+end//let//end-of-[TMfact]
+//
+val () = prints(
+"TMfact\\app(TMint(10)) = ",
+term_evaluate(TMfact\app(TMint(10))), "\n")
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
 (*
 val () = console_log(the_print_store_flush())
 *)
