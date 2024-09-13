@@ -20,7 +20,6 @@ Tue 10 Sep 2024 01:39:29 PM EDT
 #include
 "xatslib\
 /githwxi/HATS/githwxi_dats.hats"
-//
 (* ****** ****** *)
 (* ****** ****** *)
 #include
@@ -28,13 +27,19 @@ Tue 10 Sep 2024 01:39:29 PM EDT
 /prelude/HATS/prelude_JS_dats.hats"
 #include
 "xatslib/HATS/xatslib_JS_dats.hats"
-//
 (* ****** ****** *)
 (* ****** ****** *)
 //
 #include
 "srcgen2\
 /prelude/HATS/prelude_NODE_dats.hats"
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+val () =
+prints
+("Hello from [lambda0]!\n")
 //
 (* ****** ****** *)
 (* ****** ****** *)
@@ -57,6 +62,7 @@ datatype term =
 #typedef termlst = list(term)
 //
 (* ****** ****** *)
+#symload app with TMapp of 1000
 (* ****** ****** *)
 (*
 #symload nil with list_nil
@@ -107,14 +113,6 @@ prints("TMif0(", tm1, ",", tm2, ",", tm3, ")")
 //
 end//let
 }(*where*)//end-of-[g_print<term>(tm0)]
-//
-(* ****** ****** *)
-(* ****** ****** *)
-//
-(*
-val () =
-prints("Hello from [lambda0]!\n")
-*)
 //
 (* ****** ****** *)
 (* ****** ****** *)
@@ -402,6 +400,31 @@ list_cons
 (TMint(i02), tms) = tms in TMbtf(i01!=i02)
 end//let
 //
+| "~" =>
+let
+val-
+list_cons
+(TMbtf(b01), tms) = tms in TMbtf(~b01)
+end//let
+| "&&" =>
+let
+val-
+list_cons
+(TMbtf(b01), tms) = tms
+val-
+list_cons
+(TMbtf(b02), tms) = tms in TMbtf(b01 * b02)
+end//let
+| "||" =>
+let
+val-
+list_cons
+(TMbtf(b01), tms) = tms
+val-
+list_cons
+(TMbtf(b02), tms) = tms in TMbtf(b01 + b02)
+end//let
+//
 ) where
 {
 (*
@@ -452,6 +475,23 @@ TMopr("%", list@(tm1, tm2))
 #symload * with TMmul of 1000
 #symload / with TMdiv of 1000
 #symload % with TMmod of 1000
+(* ****** ****** *)
+(* ****** ****** *)
+//
+val TMtt0 = TMbtf(true)
+val TMff0 = TMbtf(false)
+//
+fun
+TMneg(tm1) = TMopr("~", tm1)
+fun
+TMand(tm1, tm2) = TMif0(tm1, tm2, TMff0)
+fun
+TMor0(tm1, tm2) = TMif0(tm1, TMtt0, tm2)
+//
+(* ****** ****** *)
+#symload && with TMand of 1000
+#symload || with TMor0 of 1000
+(* ****** ****** *)
 (* ****** ****** *)
 //
 fun
@@ -533,8 +573,8 @@ end//let//end-of-[val(TMfact)]
 
 val () =
 prints(
-"fact(10) = ",
-evaluate(TMapp(TMfact, TMint(10))), "\n")
+ "fact(10) = "
+, evaluate(TMfact\app(TMint(10))), "\n")
 
 (* ****** ****** *)
 (* ****** ****** *)
