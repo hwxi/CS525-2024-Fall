@@ -45,12 +45,14 @@ Tue 10 Sep 2024 01:39:29 PM EDT
 datatype term =
 //
 |TMint of sint
+|TMbtf of bool
 //
 |TMvar of tvar
 |TMlam of (tvar, term)
 |TMapp of (term, term)
 //
 |TMopr of (topr, list(term))
+|TMif0 of (term, term, term)
 //
 #typedef termlst = list(term)
 //
@@ -80,21 +82,28 @@ in//let
 //
 case+ tm0 of
 |
-TMint(i00) =>
-prints("TMint(", i00, ")")
+TMint(int) =>
+prints("TMint(", int, ")")
+|
+TMbtf(btf) =>
+prints("TMbtf(", btf, ")")
 |
 TMvar(x00) =>
 prints("TMvar(", x00, ")")
 |
 TMlam(x00, tm1) =>
-prints("TMlam(", x00, ", ", tm1, ")")
+prints("TMlam(", x00, ",", tm1, ")")
 |
 TMapp(tm1, tm2) =>
-prints("TMapp(", tm1, ", ", tm2, ")")
+prints("TMapp(", tm1, ",", tm2, ")")
 //
 |
 TMopr(opr, tms) =>
-prints("TMopr(", opr, ", ", tms, ")")
+prints("TMopr(", opr, ",", tms, ")")
+//
+|
+TMif0(tm1, tm2, tm3) =>
+prints("TMif0(", tm1, ",", tm2, ",", tm3, ")")
 //
 end//let
 }(*where*)//end-of-[g_print<term>(tm0)]
@@ -175,6 +184,8 @@ case+ tm0 of
 |
 TMint _ => tm0
 |
+TMbtf _ => tm0
+|
 TMvar(x01) =>
 if
 (x00=x01)
@@ -191,11 +202,22 @@ TMapp(subst(tm1), subst(tm2))
 //
 |
 TMopr(opr, tms) =>
-TMopr(opr, list_map(tms, subst))
+TMopr(opr, tms) where
+{
+val tms = list_map(tms, subst)
+}
+//
+|
+TMif0(tm1, tm2, tm3) =>
+TMif0(tm1, tm2, tm3) where
+{
+val tm1 = subst(tm1)
+val tm2 = subst(tm2) and tm3 = subst(tm3)
+}
+//
 ) where
 {
-fun
-subst(tmx) = term_subst(tmx, x00, sub)
+fun subst(tmx) = term_subst(tmx, x00, sub)
 }
 //
 (* ****** ****** *)
@@ -220,6 +242,8 @@ term_evaluate
 case+ tm0 of
 //
 |TMint _ => tm0
+|TMbtf _ => tm0
+//
 |TMvar _ => tm0
 |TMlam _ => tm0
 //
@@ -248,6 +272,17 @@ in//let
   term$opr_evaluate(opr, tms)
 end//end
 //
+|
+TMif0
+(tm1, tm2, tm3) =>
+(
+if btf
+then term_evaluate(tm2)
+else term_evaluate(tm3)) where
+{
+val-
+TMbtf(btf) = term_evaluate(tm1) }
+//
 ) where
 {
 (*
@@ -263,7 +298,6 @@ term$opr_evaluate
 case- opr of
 //
 | "+" =>
-(
 let
 val-
 list_cons
@@ -272,10 +306,8 @@ val-
 list_cons
 (TMint(i02), tms) = tms in TMint(i01+i02)
 end//let
-)
 //
 | "-" =>
-(
 let
 val-
 list_cons
@@ -284,10 +316,8 @@ val-
 list_cons
 (TMint(i02), tms) = tms in TMint(i01-i02)
 end//let
-)
 //
 | "*" =>
-(
 let
 val-
 list_cons
@@ -296,10 +326,8 @@ val-
 list_cons
 (TMint(i02), tms) = tms in TMint(i01*i02)
 end//let
-)
 //
 | "/" =>
-(
 let
 val-
 list_cons
@@ -308,10 +336,8 @@ val-
 list_cons
 (TMint(i02), tms) = tms in TMint(i01/i02)
 end//let
-)
 //
 | "%" =>
-(
 let
 val-
 list_cons
@@ -320,9 +346,69 @@ val-
 list_cons
 (TMint(i02), tms) = tms in TMint(i01%i02)
 end//let
-)
 //
-)(*case+*)//end-of-[term$opr_evaluate(opr,tms)]
+| "<" =>
+let
+val-
+list_cons
+(TMint(i01), tms) = tms
+val-
+list_cons
+(TMint(i02), tms) = tms in TMbtf(i01<i02)
+end//let
+| ">" =>
+let
+val-
+list_cons
+(TMint(i01), tms) = tms
+val-
+list_cons
+(TMint(i02), tms) = tms in TMbtf(i01>i02)
+end//let
+| "=" =>
+let
+val-
+list_cons
+(TMint(i01), tms) = tms
+val-
+list_cons
+(TMint(i02), tms) = tms in TMbtf(i01=i02)
+end//let
+| "<=" =>
+let
+val-
+list_cons
+(TMint(i01), tms) = tms
+val-
+list_cons
+(TMint(i02), tms) = tms in TMbtf(i01<=i02)
+end//let
+| ">=" =>
+let
+val-
+list_cons
+(TMint(i01), tms) = tms
+val-
+list_cons
+(TMint(i02), tms) = tms in TMbtf(i01>=i02)
+end//let
+| "!=" =>
+let
+val-
+list_cons
+(TMint(i01), tms) = tms
+val-
+list_cons
+(TMint(i02), tms) = tms in TMbtf(i01!=i02)
+end//let
+//
+) where
+{
+(*
+val () =
+prints("term$opr_evaluate: opr = ", opr, "\n")
+*)
+}(*where+*)//end-of-[term$opr_evaluate(opr,tms)]
 //
 (* ****** ****** *)
 //
@@ -368,6 +454,36 @@ TMopr("%", list@(tm1, tm2))
 #symload % with TMmod of 1000
 (* ****** ****** *)
 //
+fun
+TMilt(tm1, tm2) =
+TMopr("<", list@(tm1, tm2))
+fun
+TMigt(tm1, tm2) =
+TMopr(">", list@(tm1, tm2))
+fun
+TMieq(tm1, tm2) =
+TMopr("=", list@(tm1, tm2))
+//
+fun
+TMilte(tm1, tm2) =
+TMopr("<=", list@(tm1, tm2))
+fun
+TMigte(tm1, tm2) =
+TMopr(">=", list@(tm1, tm2))
+fun
+TMineq(tm1, tm2) =
+TMopr("!=", list@(tm1, tm2))
+//
+(* ****** ****** *)
+#symload < with TMilt of 1000
+#symload > with TMigt of 1000
+#symload = with TMieq of 1000
+#symload <= with TMilte of 1000
+#symload >= with TMigte of 1000
+#symload != with TMineq of 1000
+(* ****** ****** *)
+(* ****** ****** *)
+//
 val () = prints
 ("TMint(10)+TMint(20) = "
 ,evaluate(TMint(10)+TMint(20)), "\n")
@@ -387,6 +503,17 @@ val () = prints
 val () = prints
 ("TMint(10)%TMint(20) = "
 ,evaluate(TMint(10)%TMint(20)), "\n")
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+val () = prints
+(tm0_if, " = ", evaluate(tm0_if), "\n")
+where
+{
+val tm0_if =
+TMif0(TMint(1)>TMint(2), TMint(1), TMint(2))
+}
 //
 (* ****** ****** *)
 (* ****** ****** *)
