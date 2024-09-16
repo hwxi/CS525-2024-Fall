@@ -72,9 +72,15 @@ datatype term =
 (* ****** ****** *)
 (* ****** ****** *)
 //
+#extern
+fun<>
+term_print
+(tm0: term): void
+//
 #impltmp
-g_print
-<term>(tm0) =
+<(*tmp*)>
+term_print
+(  tm0  ) =
 (
   auxpr(tm0)) where
 {
@@ -110,14 +116,22 @@ prints("TMopr(", opr, ",", tms, ")")
 //
 |
 TMif0(tm1, tm2, tm3) =>
-prints("TMif0(", tm1, ",", tm2, ",", tm3, ")")
+prints
+("TMif0(", tm1, ",", tm2, ",", tm3, ")")
 //
 |
 TMfix(f00, x00, tm1) =>
-prints("TMfix(", f00, ",", x00, ",", tm1, ")")
+prints
+("TMfix(", f00, ",", x00, ",", tm1, ")")
 //
 end//let
-}(*where*)//end-of-[g_print<term>(tm0)]
+}(*where*)//end-of-[term_print<>( tm0 )]
+//
+//local
+val term_print__ = term_print<>
+//in//let
+#impltmp g_print<term> = term_print__
+//end//local
 //
 (* ****** ****** *)
 (* ****** ****** *)
@@ -140,9 +154,14 @@ denv = list@(tvar, dval)
 (* ****** ****** *)
 (* ****** ****** *)
 //
+#extern
+fun<>
+dval_print
+(dv0: dval): void
+//
 #impltmp
-g_print
-<dval>(dv0) =
+<(*tmp*)>
+dval_print(dv0) =
 (
 //
 case+ dv0 of
@@ -157,6 +176,14 @@ prints("DVfix(", "...", ")")
 //
 )
 //
+//local
+val dval_print__ = dval_print<>
+//in//let
+#impltmp g_print<dval> = dval_print__
+//end//let
+//
+(* ****** ****** *)
+//
 #impltmp
 g_print
 <denv>(denv) =
@@ -164,13 +191,17 @@ let
 val () =
 (
  prints("DENV("))
+//
 val () =
 GSEQ(denv).iforitm
 (
 lam(i, x) => (
-if i > 0 then pstrn","; print(x)))
-val () = prints(")")
-endlet
+if
+(i > 0)
+then pstrn","; print(x)))
+//
+val () = prints(   ")"   )
+endlet//end-of-[g_print<denv>]
 //
 (* ****** ****** *)
 (* ****** ****** *)
@@ -178,7 +209,8 @@ endlet
 fun
 denv_search$opt
 ( env: denv
-, x00: tvar): optn_vt(dval) =
+, x00: tvar)
+: optn_vt(dval) =
 (
 let
 val opt =
