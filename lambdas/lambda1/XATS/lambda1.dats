@@ -127,11 +127,11 @@ prints
 end//let
 }(*where*)//end-of-[term_print<>( tm0 )]
 //
-//local
+local
 val term_print__ = term_print<>
-//in//let
+in//local
 #impltmp g_print<term> = term_print__
-//end//local
+end//local
 //
 (* ****** ****** *)
 (* ****** ****** *)
@@ -176,11 +176,11 @@ prints("DVfix(", "...", ")")
 //
 )
 //
-//local
+local
 val dval_print__ = dval_print<>
-//in//let
+in//local
 #impltmp g_print<dval> = dval_print__
-//end//let
+end//local
 //
 (* ****** ****** *)
 //
