@@ -21,7 +21,7 @@ $(XATSHOME)/srcgen2/xats2js/srcgenx
 SRCGEN2_XSHARED=\
 $(XATSHOME)/srcgen2/xats2js/srcgenx/xshared/runtime
 SRCGEN2_XATS2JS=\
-$(XATSHOME)/srcgen2/xats2js/srcgenx/UTIL/xats2js_jsemit_dats.js
+$(XATSHOME)/srcgen2/xats2js/srcgenx/UTIL/xats2js_jsemit00_dats.js
 ########################################################################
 ########################################################################
 lambda1:: ; \
@@ -33,9 +33,8 @@ lambda1:: ; \
 $(CAT) $(SRCGEN2_XSHARED)/xats2js_prelude.js >> $@_out.js
 lambda1:: ; \
 $(CAT) $(SRCGEN2_XSHARED)/xats2js_xatslib.js >> $@_out.js
-############
 lambda1:: ; \
-$(CAT) $(XATSHOME)/prelude/DATS/CATS/JS/NODE/node000.cats >> $@_out.js
+$(CAT) $(SRCGEN2_XSHARED)/xats2js_prelude_node.js >> $@_out.js
 ############
 lambda1:: lambda1.dats; \
 $(NODE) --stack-size=4096 $(SRCGEN2_XATS2JS) $< >> $@_out.js

@@ -94,11 +94,11 @@ prints("TMint(", int, ")")
 TMbtf(btf) =>
 prints("TMbtf(", btf, ")")
 |
-TMvar(x00) =>
-prints("TMvar(", x00, ")")
+TMvar(x01) =>
+prints("TMvar(", x01, ")")
 |
-TMlam(x00, tm1) =>
-prints("TMlam(", x00, ",", tm1, ")")
+TMlam(x01, tm1) =>
+prints("TMlam(", x01, ",", tm1, ")")
 |
 TMapp(tm1, tm2) =>
 prints("TMapp(", tm1, ",", tm2, ")")
@@ -152,12 +152,69 @@ fun
 f_Omega
 (f: term): term =
 TMapp(fomega, fomega)
-where { val fomega = f_omega(f) }
+where
+{ val fomega = f_omega(f) }
 //
 (*
 HX: The famous Y-combinator:
 *)
-val Y = TMlam("f", f_Omega(TMvar"f"))
+val Y =
+TMlam("f", f_Omega(TMvar"f"))
+//
+(* ****** ****** *)
+//
+val Y1 =
+let
+val x = TMvar"x"
+val y = TMvar"y"
+val xyx =
+TMapp(TMapp(x, y), x)
+in//let
+TMapp(
+  TMlam("x",
+  TMlam("y", xyx))
+,
+  TMlam("y",
+  TMlam("x", TMapp(y, xyx))))
+end//let
+//
+(* ****** ****** *)
+//
+val Theta =
+TMapp(theta, theta) where
+{
+//
+val x = TMvar"x"
+val y = TMvar"y"
+//
+val xxy =
+TMapp(TMapp(x, x), y)
+//
+val theta =
+TMlam("x", TMlam("y",TMapp(y, xxy)))
+}
+//
+(* ****** ****** *)
+//
+val B =
+TMlam
+( "x"
+, TMlam("y"
+, TMlam("z"
+, TMapp(x, TMapp(y, z))))) where
+{
+val x = TMvar"x"
+and y = TMvar"y" and z = TMvar"z" }
+//
+(*
+HX-2024-09-17:
+NS is a strictly
+non-standard fixed-point combinator!
+*)
+val NS =
+TMapp(
+TMapp(B, omega),
+TMapp(TMapp(B, TMapp(B, omega)), B))
 //
 (* ****** ****** *)
 (* ****** ****** *)
@@ -165,10 +222,13 @@ val Y = TMlam("f", f_Omega(TMvar"f"))
 val () = prints("I = ", I, "\n")
 val () = prints("K = ", K, "\n")
 val () = prints("S = ", S, "\n")
+val () = prints("B = ", B, "\n")
 val () = prints("K1 = ", K1, "\n")
 val () = prints("omega = ", omega, "\n")
 val () = prints("Omega = ", Omega, "\n")
 val () = prints("Y = ", Y, "\n")
+val () = prints("Y1 = ", Y1, "\n")
+val () = prints("Theta = ", Theta, "\n")
 //
 (* ****** ****** *)
 (* ****** ****** *)
@@ -552,7 +612,8 @@ val () = prints
 where
 {
 val tm0_if =
-TMif0(TMint(1)>TMint(2), TMint(1), TMint(2))
+TMif0
+(TMint(1)>TMint(2), TMint(1), TMint(2))
 }
 //
 (* ****** ****** *)
@@ -572,34 +633,40 @@ end//let//end-of-[val(TMfact)]
 val () =
 prints(
  "fact(10) = "
-, evaluate(TMfact\app(TMint(10))), "\n")
+,evaluate(TMfact\app(TMint(10))), "\n")
 //
 (* ****** ****** *)
 (* ****** ****** *)
 //
 fun
 TMfix
-(f00, x01, tm2) =
-TMapp(Y, TMlam(f00, TMlam(x01, tm2)))
+(f00, x01, tma) =
+(
+TMapp(Theta,TMlam(f00,TMlam(x01,tma))))
 //
 (* ****** ****** *)
 (* ****** ****** *)
 //
 val TMfibo =
 let
+//
 val i1 = TMint 1
 val i2 = TMint 2
+//
 val xf = TMvar"f"
 val xn = TMvar"n"
+//
 in//let
+//
 TMfix("f", "n", 
 TMif0(xn >= i2,
 TMapp(xf, xn-i2)+TMapp(xf, xn-i1), xn))
+//
 end//let//end-of-[TMfibo]
 //
 val () = prints(
 "TMfibo\\app(TMint(10)) = ",
-term_evaluate(TMfibo\app(TMint(10))), "\n")
+term_evaluate(TMfibo\app(TMint(10))),"\n")
 //
 (* ****** ****** *)
 (* ****** ****** *)
