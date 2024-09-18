@@ -569,13 +569,38 @@ TMlam("f", TMlam("n",
 TMif0(xn>i0, xn*TMapp(xf, xn-i1),i1))))
 end//let//end-of-[val(TMfact)]
 //
-(* ****** ****** *)
-
 val () =
 prints(
  "fact(10) = "
 , evaluate(TMfact\app(TMint(10))), "\n")
-
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+fun
+TMfix
+(f00, x01, tm2) =
+TMapp(Y, TMlam(f00, TMlam(x01, tm2)))
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+val TMfibo =
+let
+val i1 = TMint 1
+val i2 = TMint 2
+val xf = TMvar"f"
+val xn = TMvar"n"
+in//let
+TMfix("f", "n", 
+TMif0(xn >= i2,
+TMapp(xf, xn-i2)+TMapp(xf, xn-i1), xn))
+end//let//end-of-[TMfibo]
+//
+val () = prints(
+"TMfibo\\app(TMint(10)) = ",
+term_evaluate(TMfibo\app(TMint(10))), "\n")
+//
 (* ****** ****** *)
 (* ****** ****** *)
 //
