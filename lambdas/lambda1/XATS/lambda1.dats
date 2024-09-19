@@ -101,11 +101,11 @@ prints("TMint(", int, ")")
 TMbtf(btf) =>
 prints("TMbtf(", btf, ")")
 |
-TMvar(x00) =>
-prints("TMvar(", x00, ")")
+TMvar(x01) =>
+prints("TMvar(", x01, ")")
 |
-TMlam(x00, tm1) =>
-prints("TMlam(", x00, ",", tm1, ")")
+TMlam(x01, tm1) =>
+prints("TMlam(", x01, ",", tm1, ")")
 |
 TMapp(tm1, tm2) =>
 prints("TMapp(", tm1, ",", tm2, ")")
@@ -120,9 +120,9 @@ prints
 ("TMif0(", tm1, ",", tm2, ",", tm3, ")")
 //
 |
-TMfix(f00, x00, tm1) =>
+TMfix(f00, x01, tma) =>
 prints
-("TMfix(", f00, ",", x00, ",", tm1, ")")
+("TMfix(", f00, ",", x01, ",", tma, ")")
 //
 end//let
 }(*where*)//end-of-[term_print<>( tm0 )]
@@ -298,14 +298,14 @@ DVlam(tma, env) =>
 let
 val-
 TMlam
-(x00, tmb) = tma
+(x01, tmb) = tma
 in//let
 (
 auxeval(tmb, env)) where
 {
 val
 env =
-list_cons((x00, dv2), env) }
+list_cons((x01, dv2), env) }
 //
 end//let
 |
@@ -313,7 +313,7 @@ DVfix(tma, env) =>
 let
 val-
 TMfix
-(f00, x00, tmb) = tma
+(f00, x01, tmb) = tma
 in//let
 (
 auxeval(tmb, env)) where
@@ -323,7 +323,7 @@ env =
 list_cons((f00, dv1), env)
 val
 env =
-list_cons((x00, dv2), env) }
+list_cons((x01, dv2), env) }
 end//let
 //
 end//end//end-of-[TMapp(tm1,tm2)]
