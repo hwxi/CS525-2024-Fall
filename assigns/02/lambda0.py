@@ -34,7 +34,7 @@ TM0app = 2
 TM0int = 3
 TM0btf = 4
 TM0opr = 5
-TM0if0 = 5
+TM0if0 = 6
 #
 ############################################################
 #
@@ -81,7 +81,7 @@ def TM1app(tm1, tm2):
 ############################################################
 #
 # HX-2024-09-19:
-# Points: 50
+# Points: 60
 # This assignment asks you to translate
 # a given lambda-term in the above extended lambda-calculus
 # into Church's pure lambda-calculus.
