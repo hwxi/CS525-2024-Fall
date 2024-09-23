@@ -193,15 +193,16 @@ val () =
  prints("DENV("))
 //
 val () =
-GSEQ(denv).iforitm
+list_iforitm_f2un
 (
+denv,
 lam(i, x) => (
 if
 (i > 0)
-then pstrn","; print(x)))
+then pstrn(","); print( x )))
 //
-val () = prints(   ")"   )
-endlet//end-of-[g_print<denv>]
+val () = prints(     ")"     )
+end(*let*)//end-of-[g_print<denv>(denv)]
 //
 (* ****** ****** *)
 (* ****** ****** *)
