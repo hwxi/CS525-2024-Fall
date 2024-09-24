@@ -671,6 +671,19 @@ term_evaluate(TMfibo\app(TMint(10))),"\n")
 (* ****** ****** *)
 (* ****** ****** *)
 //
+fun
+Church$numeral_evaluate
+  (num0: term): term =
+term_evaluate
+(TMapp(TMapp(num0, f), x)) where
+{
+val x = TMint(0)
+val f = TMlam("n", TMadd(TMvar("n"), TMint(1)))
+}
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
 (*
 val () = console_log(the_print_store_flush())
 *)
