@@ -18,8 +18,25 @@ def isqrt_in_lambda():
     integer x satisfying x * x <= n. Your implementation
     is expected to be effcient; your code may be tested on
     something input as large as 1000000000.
+    A 'term' is returned by isqrt_in_lambda() representing
+    the isqrt function
     """
     raise NotImplementedError
+
+############################################################
+
+def list_map_in_lambda():
+    """
+    This one is what we often call "eat-your-own-dog-food"
+    Please implement a (higher-order) list-map function in
+    LAMBDA. Note that the list in LAMBDA can be built with
+    the constructs TMnil0 and TMcons (which are more or less
+    like list_nil and list_cons in ATS, respectively)
+    A 'term' is returned by list_map_in_lambda() representing
+    the list-map function
+    """
+    raise NotImplementedError
+
 
 ############################################################
 ############################################################
