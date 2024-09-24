@@ -10,6 +10,7 @@
 
 def isqrt_in_lambda():
     """
+    HX: 10 points
     This one is what we often call "eat-your-own-dog-food"
     Please implement an integer version of the sqare root
     funtion. For instance,
@@ -27,6 +28,7 @@ def isqrt_in_lambda():
 
 def list_map_in_lambda():
     """
+    HX: 15 points
     This one is what we often call "eat-your-own-dog-food"
     Please implement a (higher-order) list-map function in
     LAMBDA. Note that the list in LAMBDA can be built with
