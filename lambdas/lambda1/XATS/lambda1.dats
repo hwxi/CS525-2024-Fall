@@ -30,9 +30,11 @@ Tue 10 Sep 2024 01:39:29 PM EDT
 (* ****** ****** *)
 (* ****** ****** *)
 //
+(*
 #include
 "srcgen2\
 /prelude/HATS/prelude_NODE_dats.hats"
+*)
 //
 (* ****** ****** *)
 (* ****** ****** *)
@@ -51,6 +53,11 @@ datatype term =
 |TMint of sint
 |TMbtf of bool
 //
+(*
+HX:
+This is Church's
+pure lambda-calculus
+*)
 |TMvar of tvar
 |TMlam of (tvar, term)
 |TMapp of (term, term)
@@ -500,6 +507,9 @@ TMopr("/", list@(tm1, tm2))
 fun
 TMmod(tm1, tm2) =
 TMopr("%", list@(tm1, tm2))
+fun
+TMpow(tm1, tm2) =
+TMopr("^", list@(tm1, tm2))
 //
 (* ****** ****** *)
 #symload + with TMadd of 1000
@@ -507,6 +517,7 @@ TMopr("%", list@(tm1, tm2))
 #symload * with TMmul of 1000
 #symload / with TMdiv of 1000
 #symload % with TMmod of 1000
+#symload ^ with TMpow of 1000
 (* ****** ****** *)
 (* ****** ****** *)
 //
