@@ -30,9 +30,11 @@ Tue 10 Sep 2024 01:39:29 PM EDT
 (* ****** ****** *)
 (* ****** ****** *)
 //
+(*
 #include
 "srcgen2\
 /prelude/HATS/prelude_NODE_dats.hats"
+*)
 //
 (* ****** ****** *)
 (* ****** ****** *)
@@ -684,9 +686,7 @@ val f = TMlam("n", TMadd(TMvar("n"), TMint(1)))
 (* ****** ****** *)
 (* ****** ****** *)
 //
-(*
 val () = console_log(the_print_store_flush())
-*)
 //
 (* ****** ****** *)
 (* ****** ****** *)

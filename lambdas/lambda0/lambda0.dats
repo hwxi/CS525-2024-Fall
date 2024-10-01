@@ -1,7 +1,8 @@
 (* ****** ****** *)
 (* ****** ****** *)
 #include
-"share/atspre_staload.hats"
+"share\
+/atspre_staload.hats"
 (* ****** ****** *)
 #include "./mylib00.dats"
 (* ****** ****** *)

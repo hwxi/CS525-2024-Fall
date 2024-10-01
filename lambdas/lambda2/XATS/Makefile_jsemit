@@ -1,48 +1,19 @@
 ########################################################################
 ########################################################################
 # Makefile for
-# CS525-2024F-lambdas-lambda0
+# CS525-2024F-lambdas-lambda2
 ########################################################################
 ########################################################################
 CAT=cat
 BUN=bun
 ECHO=echo
 NODE=node
-# NODE=nodejs
 ########################################################################
 ########################################################################
-all:: lambda0
+all:: lambda2
 ########################################################################
 ########################################################################
-testall:: lambda0; $(NODE) $<_out.js
-########################################################################
-########################################################################
-lambda0:: ; \
-echo "//" `date` > $@_out.js
-############
-lambda0:: ; \
-$(CAT) $(SRCGEN2_XSHARED)/xats2js_js1emit.js >> $@_out.js
-lambda0:: ; \
-$(CAT) $(SRCGEN2_XSHARED)/xats2js_prelude.js >> $@_out.js
-lambda0:: ; \
-$(CAT) $(SRCGEN2_XSHARED)/xats2js_xatslib.js >> $@_out.js
-############
-lambda0:: \
-lambda0.dats; \
-$(NODE) --stack-size=4096 $(SRCGEN2_XATS2JS) $< >> $@_out.js
-############
-lambda0:: ; \
-npx google-closure-compiler -W QUIET \
-  --compilation_level SIMPLE --js=$@_out.js --js_output_file=$@_out1.js
-lambda0:: ; \
-npx google-closure-compiler -W QUIET \
-  --compilation_level ADVANCED --js=$@_out.js --js_output_file=$@_out2.js
-########################################################################
-########################################################################
-clean:: ; rm -f *~
-cleanall:: ; rm -f *~
-cleanall:: ; rm -f lambda0_out.js
-cleanall:: ; rm -f lambda0_out?.js
+testall:: lambda2; $(NODE) $<_out.js
 ########################################################################
 ########################################################################
 SRCGEN2_SRCGENX=\
@@ -52,5 +23,33 @@ $(XATSHOME)/srcgen2/xats2js/srcgenx/xshared/runtime
 SRCGEN2_XATS2JS=\
 $(XATSHOME)/srcgen2/xats2js/srcgenx/UTIL/xats2js_jsemit00_dats.js
 ########################################################################
+########################################################################
+lambda2:: ; \
+echo "//" `date` > $@_out.js
+############
+lambda2:: ; \
+$(CAT) $(SRCGEN2_XSHARED)/xats2js_js1emit.js >> $@_out.js
+lambda2:: ; \
+$(CAT) $(SRCGEN2_XSHARED)/xats2js_prelude.js >> $@_out.js
+lambda2:: ; \
+$(CAT) $(SRCGEN2_XSHARED)/xats2js_xatslib.js >> $@_out.js
+# lambda2:: ; \
+# $(CAT) $(SRCGEN2_XSHARED)/xats2js_prelude_node.js >> $@_out.js
+############
+lambda2:: lambda2.dats; \
+$(NODE) --stack-size=4096 $(SRCGEN2_XATS2JS) $< >> $@_out.js
+############
+# lambda2:: ; \
+# npx google-closure-compiler -W QUIET \
+#   --compilation_level SIMPLE --js=$@_out.js --js_output_file=$@_out1.js
+# lambda2:: ; \
+# npx google-closure-compiler -W QUIET \
+#   --compilation_level ADVANCED --js=$@_out.js --js_output_file=$@_out2.js
+########################################################################
+########################################################################
+clean:: ; rm -f *~
+cleanall:: ; rm -f *~
+cleanall:: ; rm -f lambda2_out.js
+cleanall:: ; rm -f lambda2_out?.js
 ########################################################################
 ###################### end of [Makefile_jsemit] ########################
