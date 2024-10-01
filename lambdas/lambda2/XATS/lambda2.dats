@@ -73,7 +73,138 @@ datatype dexp =
 (tvar(*f*)
 ,tvar(*x*), styp, dexp, styp)
 //
+|DEnil0 of ()
+|DEcons of (dexp, dexp)
+//
+|DEpfst of (dexp) // 1st proj
+|DEpsnd of (dexp) // 2nd proj
+//
+(* ****** ****** *)
 #typedef dexplst = list(dexp)
+(* ****** ****** *)
+(* ****** ****** *)
+//
+#extern
+fun<>
+styp_print(st0: styp): void
+#extern
+fun<>
+dexp_print(de0: dexp): void
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+#impltmp
+<(*tmp*)>
+styp_print
+(  st0  ) =
+(
+  auxpr(st0)) where
+{
+//
+fun
+auxpr(st0) =
+let
+//
+#impltmp
+g_print<styp> = auxpr
+//
+in//let
+//
+case+ st0 of
+|
+STbas(tnam) =>
+prints("STbas(", tnam, ")")
+|
+STtup(st1, st2) =>
+prints("STtup(", st1, ",", st2, ")")
+|
+STfun(st1, st2) =>
+prints("STfun(", st1, ",", st2, ")")
+//
+end//let
+//
+}(*where*)//end-of-[styp_print<>(st0)]
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+#impltmp
+<(*tmp*)>
+dexp_print
+(  de0  ) =
+(
+  auxpr(de0)) where
+{
+//
+fun
+auxpr(de0) =
+let
+//
+#impltmp
+g_print<dexp> = auxpr
+//
+in//let
+//
+case+ de0 of
+|
+DEint(int) =>
+prints("DEint(", int, ")")
+|
+DEbtf(btf) =>
+prints("DEbtf(", btf, ")")
+|
+DEvar(x01) =>
+prints("DEvar(", x01, ")")
+|
+DElam
+(x01, st1, de1) =>
+prints("DElam(",
+x01, ",", st1, ",", de1, ")")
+|
+DEapp(de1, de2) =>
+prints("DEapp(", de1, ",", de2, ")")
+//
+|
+DEopr(opr, des) =>
+prints("DEopr(", opr, ",", des, ")")
+//
+|
+DEif0(de1, de2, de3) =>
+prints(
+"DEif0(", de1, ",", de2, ",", de3, ")")
+//
+|
+DEfix
+(f00
+,x01, st1, dea, sta) =>
+prints("DEfix(",
+f00, ",",
+x01, ",", st1, ",", dea, ",", sta, ")")
+//
+|
+DEnil0() =>
+prints("DEnil(", ")")
+|
+DEcons(de1, de2) =>
+prints
+("DEcons(", de1, ",", de2, ")")
+//
+|DEpfst
+( tup ) => prints("DEpfst(", tup, ")")
+|DEpsnd
+( tup ) => prints("DEpsnd(", tup, ")")
+//
+end//let
+}(*where*) // end-of-[ dexp_print<>(de0) ]
+//
+(* ****** ****** *)
+//
+local
+val dexp_print__ = dexp_print<>(*void*)
+in//local
+#impltmp g_print<dexp> = dexp_print__(*void*)
+end//local
 //
 (* ****** ****** *)
 (* ****** ****** *)
