@@ -284,17 +284,33 @@ dexp_tpcheck_env
 case+ de0 of
 //
 |DEint _ =>
-let
-val st0 = STint0 in DEinfo(de0, st0)
-end//let
+(
+  DEinfo(de0, STint0))
 |DEbtf _ =>
+(
+  DEinfo(de0, STbool))
+//
+|DElam
+(x01, tp1, de1) =>
 let
-val st0 = STbool in DEinfo(de0, st0)
+val env =
+list_cons((x01, tp1), env)
+val de1 =
+dexp_tpcheck_env(de1, env)
+in
+let
+val st0 =
+STfun(tp1, styp(de1))
+in//let
+DEinfo
+(
+DElam(x01, tp1, de1), st0)
+end//let
 end//let
 //
 |DEnil0() =>
 (
-DEinfo(de0, STunit(*0*)))
+ DEinfo(de0, STunit(*0*)))
 //
 |DEcons
 (de1, de2) =>
@@ -337,14 +353,13 @@ val dea =
 dexp_tpcheck_env(dea, env)
 in//let
 (
-DEinfo(DEpsnd(dea), st2)) where
+  DEinfo(DEpsnd(dea), st2)) where
 {
 val sta = styp(dea)
 val st2 =
-(
-case+ sta of
-| STtup(st1, st2) => st2
-| _(*non-STtup*) => STpsnd(sta)) }
+( case+ sta of
+  | STtup(st1, st2) => st2
+  | _(*non-STtup*) => STpsnd(sta)) }
 end//let
 //
 ) where // end-of-[case+]
@@ -352,7 +367,7 @@ end//let
 //
 fun
 styp(de0: dexp): styp =
-(case+ de0 of DEinfo(de1, st0) => st0)
+(case- de0 of DEinfo(de1, st0) => st0)
 //
 }(*where*)//end-of-[dexp_tpcheck_env(de0,env)]
 //

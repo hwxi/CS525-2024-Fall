@@ -30,11 +30,11 @@ Tue 10 Sep 2024 01:39:29 PM EDT
 (* ****** ****** *)
 (* ****** ****** *)
 //
-(*
+// (*
 #include
 "srcgen2\
 /prelude/HATS/prelude_NODE_dats.hats"
-*)
+// *)
 //
 (* ****** ****** *)
 (* ****** ****** *)
@@ -492,6 +492,8 @@ end//let
 (*
 val () =
 prints("term$opr_evaluate: opr = ", opr, "\n")
+val () =
+prints("term$opr_evaluate: tms = ", tms, "\n")
 *)
 }(*where+*)//end-of-[term$opr_evaluate(opr,tms)]
 //
@@ -686,7 +688,26 @@ val f = TMlam("n", TMadd(TMvar("n"), TMint(1)))
 (* ****** ****** *)
 (* ****** ****** *)
 //
+val TMthree =
+let
+val f = TMvar"f"
+val x = TMvar"x" in
+TMlam("f",
+TMlam("x", TMapp(f, TMapp(f, TMapp(f, x)))))
+end//let
+val () =
+prints("TMint3 = ",
+Church$numeral_evaluate(term_evaluate(TMthree)), "\n")
+//
+(* ****** ****** *)
+(* ****** ****** *)
+#include "./DATA/Sebastian.dats"
+(* ****** ****** *)
+(* ****** ****** *)
+//
+(*
 val () = console_log(the_print_store_flush())
+*)
 //
 (* ****** ****** *)
 (* ****** ****** *)
