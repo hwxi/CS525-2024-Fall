@@ -164,17 +164,43 @@ term_evaluate
 (* ****** ****** *)
 (* ****** ****** *)
 //
+local
 val f = "f"
 val x = "x"
 val y = "y"
 val m = "m"
 val n = "n"
 val p = "p"
-//
-val TMfact4 =
+in//local
+val TMfact4 = // HX: this one is correct
 TMapp(TMapp(TMlam(f,TMapp(TMlam(x,TMapp(TMvar(f),TMapp(TMvar(x),TMvar(x)))),TMlam(x,TMapp(TMvar(f),TMapp(TMvar(x),TMvar(x)))))),TMlam(f,TMlam(n,TMapp(TMapp(TMapp(TMapp(TMapp(TMlam(n,TMapp(TMapp(TMvar(n),TMlam(x,TMlam(x,TMlam(y,TMvar(y))))),TMlam(x,TMlam(y,TMvar(x))))),TMapp(TMapp(TMlam(f,TMlam(x,TMvar(x))),TMlam(n,TMapp(TMlam(p,TMapp(TMvar(p),TMlam(x,TMlam(y,TMvar(x))))),TMapp(TMapp(TMvar(n),TMlam(p,TMapp(TMapp(TMlam(x,TMlam(y,TMlam(f,TMapp(TMapp(TMvar(f),TMvar(x)),TMvar(y))))),TMapp(TMlam(p,TMapp(TMvar(p),TMlam(x,TMlam(y,TMvar(y))))),TMvar(p))),TMapp(TMlam(n,TMlam(f,TMlam(x,TMapp(TMvar(f),TMapp(TMapp(TMvar(n),TMvar(f)),TMvar(x)))))),TMapp(TMlam(p,TMapp(TMvar(p),TMlam(x,TMlam(y,TMvar(y))))),TMvar(p)))))),TMapp(TMapp(TMlam(x,TMlam(y,TMlam(f,TMapp(TMapp(TMvar(f),TMvar(x)),TMvar(y))))),TMlam(f,TMlam(x,TMvar(x)))),TMlam(f,TMlam(x,TMvar(x)))))))),TMvar(n))),TMlam(x,TMlam(y,TMvar(y)))),TMlam(x,TMlam(y,TMvar(x)))),TMapp(TMapp(TMlam(m,TMlam(n,TMlam(f,TMlam(x,TMapp(TMapp(TMvar(m),TMapp(TMvar(n),TMvar(f))),TMvar(x)))))),TMvar(n)),TMapp(TMvar(f),TMapp(TMapp(TMlam(f,TMlam(x,TMapp(TMvar(f),TMvar(x)))),TMlam(n,TMapp(TMlam(p,TMapp(TMvar(p),TMlam(x,TMlam(y,TMvar(x))))),TMapp(TMapp(TMvar(n),TMlam(p,TMapp(TMapp(TMlam(x,TMlam(y,TMlam(f,TMapp(TMapp(TMvar(f),TMvar(x)),TMvar(y))))),TMapp(TMlam(p,TMapp(TMvar(p),TMlam(x,TMlam(y,TMvar(y))))),TMvar(p))),TMapp(TMlam(n,TMlam(f,TMlam(x,TMapp(TMvar(f),TMapp(TMapp(TMvar(n),TMvar(f)),TMvar(x)))))),TMapp(TMlam(p,TMapp(TMvar(p),TMlam(x,TMlam(y,TMvar(y))))),TMvar(p)))))),TMapp(TMapp(TMlam(x,TMlam(y,TMlam(f,TMapp(TMapp(TMvar(f),TMvar(x)),TMvar(y))))),TMlam(f,TMlam(x,TMvar(x)))),TMlam(f,TMlam(x,TMvar(x)))))))),TMvar(n))))),TMlam(f,TMlam(x,TMapp(TMvar(f),TMvar(x)))))))),TMlam(f,TMlam(x,TMapp(TMvar(f),TMapp(TMvar(f),TMapp(TMvar(f),TMapp(TMvar(f),TMvar(x))))))))
 //
 val () = println!("TMfact4 = ", Church$numeral_evaluate(term_evaluate(TMfact4)))
+//
+end//local
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+local
+val f = "f"
+val x = "x"
+val m = "m"
+val n = "n"
+val y = "y"
+val u = "u"
+val g = "g"
+val h = "h"
+val b = "b"
+//
+in//local
+//
+val TMfactx = // HX: this one is not correct
+TMapp(TMlam(f,TMapp(TMlam(x,TMapp(TMvar(f),TMapp(TMvar(x),TMvar(x)))),TMlam(x,TMapp(TMvar(f),TMapp(TMvar(x),TMvar(x)))))),TMlam(f,TMlam(n,TMapp(TMapp(TMapp(TMlam(b,TMlam(x,TMlam(y,TMapp(TMapp(TMvar(b),TMvar(x)),TMvar(y))))),TMapp(TMapp(TMlam(m,TMlam(n,TMapp(TMlam(b,TMapp(TMapp(TMvar(b),TMlam(x,TMlam(y,TMvar(y)))),TMlam(x,TMlam(y,TMvar(x))))),TMapp(TMapp(TMlam(m,TMlam(n,TMapp(TMlam(n,TMapp(TMapp(TMvar(n),TMlam(x,TMlam(x,TMlam(y,TMvar(y))))),TMlam(x,TMlam(y,TMvar(x))))),TMapp(TMapp(TMlam(m,TMlam(n,TMapp(TMapp(TMvar(n),TMlam(n,TMlam(f,TMlam(x,TMapp(TMapp(TMapp(TMvar(n),TMlam(g,TMlam(h,TMapp(TMvar(h),TMapp(TMvar(g),TMvar(f)))))),TMlam(u,TMvar(x))),TMlam(u,TMvar(u))))))),TMvar(m)))),TMvar(m)),TMvar(n))))),TMvar(m)),TMvar(n))))),TMvar(n)),TMlam(f,TMlam(x,TMvar(x))))),TMapp(TMapp(TMlam(m,TMlam(n,TMlam(f,TMapp(TMvar(m),TMapp(TMvar(n),TMvar(f)))))),TMvar(n)),TMapp(TMvar(f),TMapp(TMapp(TMlam(m,TMlam(n,TMapp(TMapp(TMvar(n),TMlam(n,TMlam(f,TMlam(x,TMapp(TMapp(TMapp(TMvar(n),TMlam(g,TMlam(h,TMapp(TMvar(h),TMapp(TMvar(g),TMvar(f)))))),TMlam(u,TMvar(x))),TMlam(u,TMvar(u))))))),TMvar(m)))),TMvar(n)),TMlam(f,TMlam(x,TMapp(TMvar(f),TMvar(x)))))))),TMlam(f,TMlam(x,TMapp(TMvar(f),TMvar(x))))))))
+//
+val () = println!("TMfactx = ", Church$numeral_evaluate(term_evaluate(TMfactx)))
+//
+end//local
 //
 (* ****** ****** *)
 (* ****** ****** *)
