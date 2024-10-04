@@ -51,7 +51,7 @@ val () = prints
 //
 datatype styp =
 //
-| STbas of snam
+| STbas of (snam)
 | STtup of (styp, styp)
 | STfun of (styp, styp)
 //
@@ -59,6 +59,9 @@ datatype styp =
 HX-2024-10-01:
 these are for error handling:
 *)
+//
+| STnone of (   ) // none
+//
 | STpfst of (styp) // nontup
 | STpsnd of (styp) // nontup
 | STfarg of (styp) // nonfun
@@ -145,6 +148,8 @@ prints("STtup(", st1, ",", st2, ")")
 STfun(st1, st2) =>
 prints("STfun(", st1, ",", st2, ")")
 //
+|
+STnone() => prints("STnone(",")")
 |
 STpfst(sta) => prints("STpfst(",sta,")")
 |
@@ -269,6 +274,36 @@ dexp_tpcheck_env
 (* ****** ****** *)
 (* ****** ****** *)
 //
+fun
+senv_search$opt
+( env: senv
+, x00: dvar)
+: optn_vt(styp) =
+(
+let
+val opt =
+strm_vt_head$opt0<kx>
+(
+gseq_filter_lstrm(env))
+in//let
+case+ opt of
+| ~
+optn_vt_nil
+  ((*0*)) => optn_vt_nil()
+| ~
+optn_vt_cons
+  ( kx0 ) => optn_vt_cons(kx0.1)
+end
+) where
+{
+#typedef kx = @(dvar, styp)
+#impltmp
+filter$test<kx>(kx0) = (x00 = kx0.0)
+}
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
 #impltmp
 dexp_tpcheck(de0) =
 let
@@ -290,14 +325,32 @@ case+ de0 of
 (
   DEinfo(de0, STbool))
 //
+|DEvar(x01) =>
+let
+val opt =
+senv_search$opt(env, x01)
+in
+(
+  DEinfo(de0, st1)) where
+{
+val st1 =
+(case+ opt of
+|optn_vt_nil() => STnone()
+|optn_vt_cons(st1) => (st1))
+}
+end//end//end-of-[DEvar(...)]
+//
 |DElam
 (x01, tp1, de1) =>
 let
+//
 val env =
 list_cons((x01, tp1), env)
 val de1 =
 dexp_tpcheck_env(de1, env)
-in
+//
+in//let
+//
 let
 val st0 =
 STfun(tp1, styp(de1))
@@ -306,7 +359,10 @@ DEinfo
 (
 DElam(x01, tp1, de1), st0)
 end//let
-end//let
+//
+end//end//end-of-[DElam(...)]
+//
+(* ****** ****** *)
 //
 |DEnil0() =>
 (
@@ -329,7 +385,9 @@ DEinfo(DEcons(de1, de2), st0)
 val st0 =
 (
   STtup(styp(de1), styp(de2))) }
-end//let
+end//end//end-of-[DEcons(de1,de2)]
+//
+(* ****** ****** *)
 //
 |DEpfst(dea) =>
 let
@@ -343,9 +401,9 @@ val sta = styp(dea)
 val st1 =
 (
 case+ sta of
-| STtup(st1, st2) => st1
-| _(*non-STtup*) => STpfst(sta)) }
-end//let
+|STtup(st1,st2) => ( st1 )
+|_(*non-STtup*) => STpfst(sta)) }
+end//end//end-of-[DEpfst(  ...  )]
 //
 |DEpsnd(dea) =>
 let
@@ -357,10 +415,13 @@ in//let
 {
 val sta = styp(dea)
 val st2 =
-( case+ sta of
-  | STtup(st1, st2) => st2
-  | _(*non-STtup*) => STpsnd(sta)) }
-end//let
+(
+case+ sta of
+|STtup(st1, st2) => st2
+|_(*non-STtup*) => STpsnd(sta)) }
+end//end//end-of-[DEpsnd(  ...  )]
+//
+(* ****** ****** *)
 //
 ) where // end-of-[case+]
 {
