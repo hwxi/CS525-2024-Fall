@@ -136,7 +136,7 @@ print("evaluate(SKKx) =", term_evaluate(SKKx()))
 #
 ############################################################
 ############################################################
-
+#
 def TMfact4():
     x = "x"
     y = "y"
@@ -150,6 +150,9 @@ def TMfact4():
     return TMapp(TMapp(TMlam(f,TMapp(TMlam(x,TMapp(TMvar(f),TMapp(TMvar(x),TMvar(x)))),TMlam(x,TMapp(TMvar(f),TMapp(TMvar(x),TMvar(x)))))),TMlam(f,TMlam(n,TMapp(TMapp(TMapp(TMapp(TMapp(TMlam(n,TMapp(TMapp(TMvar(n),TMlam(x,TMlam(x,TMlam(y,TMvar(y))))),TMlam(x,TMlam(y,TMvar(x))))),TMapp(TMapp(TMlam(f,TMlam(x,TMvar(x))),TMlam(n,TMapp(TMlam(p,TMapp(TMvar(p),TMlam(x,TMlam(y,TMvar(x))))),TMapp(TMapp(TMvar(n),TMlam(p,TMapp(TMapp(TMlam(x,TMlam(y,TMlam(f,TMapp(TMapp(TMvar(f),TMvar(x)),TMvar(y))))),TMapp(TMlam(p,TMapp(TMvar(p),TMlam(x,TMlam(y,TMvar(y))))),TMvar(p))),TMapp(TMlam(n,TMlam(f,TMlam(x,TMapp(TMvar(f),TMapp(TMapp(TMvar(n),TMvar(f)),TMvar(x)))))),TMapp(TMlam(p,TMapp(TMvar(p),TMlam(x,TMlam(y,TMvar(y))))),TMvar(p)))))),TMapp(TMapp(TMlam(x,TMlam(y,TMlam(f,TMapp(TMapp(TMvar(f),TMvar(x)),TMvar(y))))),TMlam(f,TMlam(x,TMvar(x)))),TMlam(f,TMlam(x,TMvar(x)))))))),TMvar(n))),TMlam(x,TMlam(y,TMvar(y)))),TMlam(x,TMlam(y,TMvar(x)))),TMapp(TMapp(TMlam(m,TMlam(n,TMlam(f,TMlam(x,TMapp(TMapp(TMvar(m),TMapp(TMvar(n),TMvar(f))),TMvar(x)))))),TMvar(n)),TMapp(TMvar(f),TMapp(TMapp(TMlam(f,TMlam(x,TMapp(TMvar(f),TMvar(x)))),TMlam(n,TMapp(TMlam(p,TMapp(TMvar(p),TMlam(x,TMlam(y,TMvar(x))))),TMapp(TMapp(TMvar(n),TMlam(p,TMapp(TMapp(TMlam(x,TMlam(y,TMlam(f,TMapp(TMapp(TMvar(f),TMvar(x)),TMvar(y))))),TMapp(TMlam(p,TMapp(TMvar(p),TMlam(x,TMlam(y,TMvar(y))))),TMvar(p))),TMapp(TMlam(n,TMlam(f,TMlam(x,TMapp(TMvar(f),TMapp(TMapp(TMvar(n),TMvar(f)),TMvar(x)))))),TMapp(TMlam(p,TMapp(TMvar(p),TMlam(x,TMlam(y,TMvar(y))))),TMvar(p)))))),TMapp(TMapp(TMlam(x,TMlam(y,TMlam(f,TMapp(TMapp(TMvar(f),TMvar(x)),TMvar(y))))),TMlam(f,TMlam(x,TMvar(x)))),TMlam(f,TMlam(x,TMvar(x)))))))),TMvar(n))))),TMlam(f,TMlam(x,TMapp(TMvar(f),TMvar(x)))))))),TMlam(f,TMlam(x,TMapp(TMvar(f),TMapp(TMvar(f),TMapp(TMvar(f),TMapp(TMvar(f),TMvar(x))))))))
 #
 print("evaluate(TMfact4) =", term_evaluate(TM1app(TM1app(TMfact4(), TM1cst("f")), TM1cst("x"))))
+#
+# evaluate(TMfact4) =
+# TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMapp(TMcst(f),TMcst(x)))))))))))))))))))))))))
 #
 ############################################################
 ############################################################
