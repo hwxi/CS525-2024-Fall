@@ -30,11 +30,9 @@ Mon Sep 30 11:37:04 PM EDT 2024
 (* ****** ****** *)
 (* ****** ****** *)
 //
-(*
 #include
 "srcgen2\
 /prelude/HATS/prelude_NODE_dats.hats"
-*)
 //
 (* ****** ****** *)
 (* ****** ****** *)
@@ -116,6 +114,23 @@ styp_print(st0: styp): void
 #extern
 fun<>
 dexp_print(de0: dexp): void
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+#impltmp
+g_ptype<styp>
+( (*void*) ) = strn_print("styp")
+#impltmp
+g_ptype<dexp>
+( (*void*) ) = strn_print("dexp")
+//
+(* ****** ****** *)
+//
+#impltmp
+g_print<styp> = styp_print(*void*)
+#impltmp
+g_print<dexp> = dexp_print(*void*)
 //
 (* ****** ****** *)
 (* ****** ****** *)
@@ -430,7 +445,29 @@ fun
 styp(de0: dexp): styp =
 (case- de0 of DEinfo(de1, st0) => st0)
 //
+val () = prints
+("dexp_tycheck_env: de0 = ", de0, "\n")
+//
 }(*where*)//end-of-[dexp_tpcheck_env(de0,env)]
+//
+(* ****** ****** *)
+(* ****** ****** *)
+//
+val X = STbas"X"
+val Y = STbas"Y"
+//
+val K0 =
+let
+val x = DEvar"x"
+val y = DEvar"y"
+in//let
+DElam("x", X, DElam("y", Y, x))
+end//end//end-of-[val(K0)]
+//
+val K1 = dexp_tpcheck(K0)
+//
+val () = prints("K0 = ", K0, "\n")
+val () = prints("K1 = ", K1, "\n")
 //
 (* ****** ****** *)
 (* ****** ****** *)
