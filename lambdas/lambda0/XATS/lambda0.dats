@@ -701,9 +701,6 @@ Church$numeral_evaluate(term_evaluate(TMthree)), "\n")
 //
 (* ****** ****** *)
 (* ****** ****** *)
-#include "./DATA/Sebastian.dats"
-(* ****** ****** *)
-(* ****** ****** *)
 //
 (*
 val () = console_log(the_print_store_flush())
