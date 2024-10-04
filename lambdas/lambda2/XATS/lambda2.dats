@@ -199,27 +199,22 @@ g_print<dexp> = auxpr
 in//let
 //
 case+ de0 of
-|
-DEint(int) =>
+|DEint(int) =>
 prints("DEint(", int, ")")
-|
-DEbtf(btf) =>
+|DEbtf(btf) =>
 prints("DEbtf(", btf, ")")
-|
-DEvar(x01) =>
+//
+|DEvar(x01) =>
 prints("DEvar(", x01, ")")
-|
-DElam
+|DElam
 (x01, st1, de1) =>
 prints("DElam(",
 x01, ",", st1, ",", de1, ")")
-|
-DEapp(de1, de2) =>
+|DEapp(de1, de2) =>
 prints
 ("DEapp(", de1, ",", de2, ")")
 //
-|
-DEopr(opr, des) =>
+|DEopr(opr, des) =>
 prints
 ("DEopr(", opr, ",", des, ")")
 //
@@ -356,7 +351,8 @@ val st1 =
 end//end//end-of-[DEvar(...)]
 //
 |DElam
-(x01, tp1, de1) =>
+(x01
+,tp1, de1) =>
 let
 //
 val env =
@@ -370,12 +366,48 @@ let
 val st0 =
 STfun(tp1, styp(de1))
 in//let
-DEinfo
 (
-DElam(x01, tp1, de1), st0)
+DEinfo
+(DElam(x01, tp1, de1), st0))
 end//let
 //
 end//end//end-of-[DElam(...)]
+//
+(* ****** ****** *)
+//
+|DEapp
+(de1, de2) =>
+let
+//
+val de1 =
+dexp_tpcheck_env(de1, env)
+val de2 =
+dexp_tpcheck_env(de2, env)
+//
+val st1 = styp(de1)
+val sta =
+(
+case+ st1 of
+|
+STfun(sta, _) => sta
+|
+_(*non-STfun*) => STfarg(st1)
+)
+val stb =
+(
+case+ st1 of
+|
+STfun(_, stb) => stb
+|
+_(*non-STfun*) => STfres(st1)
+)
+//
+val de2 = DEcast(de2, sta)
+//
+in//let
+(
+  DEinfo(DEapp(de1, de2), stb))
+end//end//end-of-[DEapp(de1,de2)]
 //
 (* ****** ****** *)
 //
@@ -455,6 +487,9 @@ val () = prints
 //
 val X = STbas"X"
 val Y = STbas"Y"
+val Z = STbas"Z"
+//
+(* ****** ****** *)
 //
 val K0 =
 let
@@ -468,6 +503,21 @@ val K1 = dexp_tpcheck(K0)
 //
 val () = prints("K0 = ", K0, "\n")
 val () = prints("K1 = ", K1, "\n")
+//
+(* ****** ****** *)
+val S0 =
+let
+val x = DEvar"x"
+val y = DEvar"y"
+val z = DEvar"z"
+in//let
+DElam("x", STfun(X, STfun(Y, Z)), DElam("y", STfun(X, Y), DElam("z", X, DEapp(DEapp(x, z), DEapp(y, z)))))
+end//end//end-of-[val(K0)]
+//
+val S1 = dexp_tpcheck(S0)
+//
+val () = prints("S0 = ", S0, "\n")
+val () = prints("S1 = ", S1, "\n")
 //
 (* ****** ****** *)
 (* ****** ****** *)
