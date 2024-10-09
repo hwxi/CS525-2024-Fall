@@ -194,10 +194,11 @@ def term_evaluate(tm0):
         tm1 = tm0.arg1
         tm2 = tm0.arg2
         tm1 = term_evaluate(tm1)
+        tm2 = term_evaluate(tm2)
         if (tm1.ctag == TM0lam):
             return term_evaluate(term_beta2red(tm1, tm2))
         else:
-            return TM1app(tm1, term_evaluate(tm2))
+            return TM1app(tm1, tm2) # HX: this is a type-error
     if (tm0.ctag == TM0int):
         return tm0
     if (tm0.ctag == TM0btf):
@@ -270,6 +271,13 @@ def SKKx():
 print("evaluate(SKKx) =", term_evaluate(SKKx()))
 #
 ############################################################
+def TM1gt(tm1, tm2):
+    return TM1opr(">", [tm1, tm2])
+def TM1sub(tm1, tm2):
+    return TM1opr("-", [tm1, tm2])
+def TM1mul(tm1, tm2):
+    return TM1opr("*", [tm1, tm2])
+############################################################
 def TM1dbl():
     x = TM1var("x")
     return TM1lam("x", TM1opr("+", [x, x]))
@@ -278,17 +286,20 @@ print("evaluate(TM1dbl(5)) =", term_evaluate(TM1app(TM1dbl(), TM1int(5))))
 def Y():
     f = TM1var("f")
     x = TM1var("x")
+    y = TM1var("y")
     fomega = TM1lam("x", TM1app(f, TM1app(x, x)))
     return TM1lam("f", TM1app(fomega, fomega))
-def TM1fix(fnm, xnm, term):
-    return TM1app(Y(), TM1lam(fnm, TM1lam(xnm, term)))
 ############################################################
-def TM1gt(tm1, tm2):
-    return TM1opr(">", [tm1, tm2])
-def TM1sub(tm1, tm2):
-    return TM1opr("-", [tm1, tm2])
-def TM1mul(tm1, tm2):
-    return TM1opr("*", [tm1, tm2])
+def Y1():
+    f = TM1var("f")
+    x = TM1var("x")
+    y = TM1var("y")
+    fomega = TM1lam("x", TM1app(f, TM1lam("y", TM1app(TM1app(x, x), y))))
+    return TM1lam("f", TM1app(fomega, fomega))
+############################################################
+def TM1fix(fnm, xnm, term):
+    return TM1app(Y1(), TM1lam(fnm, TM1lam(xnm, term)))
+############################################################
 def TM1fact():
     i0 = TM1int(0)
     i1 = TM1int(1)
