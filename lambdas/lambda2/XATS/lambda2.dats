@@ -505,24 +505,23 @@ val () = prints("K0 = ", K0, "\n")
 val () = prints("K1 = ", K1, "\n")
 //
 (* ****** ****** *)
+//
 val S0 =
 let
 val x = DEvar"x"
 val y = DEvar"y"
 val z = DEvar"z"
 in//let
-DElam("x", STfun(X, STfun(Y, Z)), DElam("y", STfun(X, Y), DElam("z", X, DEapp(DEapp(x, z), DEapp(y, z)))))
+DElam("x",
+STfun(X, STfun(Y, Z)), // X -> (Y -> Z)
+DElam("y", STfun(X, Y), // X -> Y
+DElam("z", Z, DEapp(DEapp(x, z), DEapp(y, z)))))
 end//end//end-of-[val(K0)]
 //
 val S1 = dexp_tpcheck(S0)
 //
 val () = prints("S0 = ", S0, "\n")
 val () = prints("S1 = ", S1, "\n")
-//
-(* ****** ****** *)
-(* ****** ****** *)
-//
-val () = console_log(the_print_store_flush())
 //
 (* ****** ****** *)
 (* ****** ****** *)
