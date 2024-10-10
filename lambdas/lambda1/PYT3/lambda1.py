@@ -195,23 +195,92 @@ class dval_fix:
 # end-of-class(dval_fix)
 ############################################################
 def denv_search2opt(env, x00):
-    for xtp in env:
-        if x00 == xtp[0]:
-            return xtp[1]
+    # print("denv_search2opt: env =", env)
+    for xdv in reversed(env):
+        if x00 == xdv[0]:
+            return xdv[1]
     return None # HX: x00 is not found
 ############################################################
 def term_evaluate(tm0):
     def auxeval(tm0, env):
+        # print("auxeval: tm0 =", tm0)
+        # print("auxeval: env =", env)
         if tm0.ctag == TM0int:
             return dval_int(tm0.arg1)
         if tm0.ctag == TM0btf:
             return dval_btf(tm0.arg1)
+        if tm0.ctag == TM0var:
+            return denv_search2opt(env, tm0.arg1)
+        if tm0.ctag == TM0lam:
+            return dval_lam(tm0, env.copy())
+        if tm0.ctag == TM0app:
+            dv1 = auxeval(tm0.arg1, env)
+            dv2 = auxeval(tm0.arg2, env)
+            if dv1.ctag == DV0lam:
+                tma = dv1.arg1
+                x01 = tma.arg1
+                tmb = tma.arg2
+                env = dv1.arg2
+                return auxeval(tmb, env+[(x01, dv2)])
+            raise TypeError(tm0) # HX: should be deadcode!
+        if (tm0.ctag == TM0opr):
+            opr = tm0.arg1
+            tms = tm0.arg2
+            if (opr == "<"):
+                dv0 = auxeval(tms[0], env)
+                dv1 = auxeval(tms[1], env)
+                return dval_btf(dv0.arg1 < dv1.arg1)
+            if (opr == ">"):
+                dv0 = auxeval(tms[0], env)
+                dv1 = auxeval(tms[1], env)
+                return dval_btf(dv0.arg1 > dv1.arg1)
+            if (opr == "="):
+                dv0 = auxeval(tms[0], env)
+                dv1 = auxeval(tms[1], env)
+                return dval_btf(dv0.arg1 == dv1.arg1)
+            if (opr == "<="):
+                dv0 = auxeval(tms[0], env)
+                dv1 = auxeval(tms[1], env)
+                return dval_btf(dv0.arg1 <= dv1.arg1)
+            if (opr == ">="):
+                dv0 = auxeval(tms[0], env)
+                dv1 = auxeval(tms[1], env)
+                return dval_btf(dv0.arg1 >= dv1.arg1)
+            if (opr == "!="):
+                dv0 = auxeval(tms[0], env)
+                dv1 = auxeval(tms[1], env)
+                return dval_btf(dv0.arg1 != dv1.arg1)
+            if (opr == "+"):
+                dv0 = auxeval(tms[0], env)
+                dv1 = auxeval(tms[1], env)
+                return dval_int(dv0.arg1 + dv1.arg1)
+            if (opr == "-"):
+                dv0 = auxeval(tms[0], env)
+                dv1 = auxeval(tms[1], env)
+                return dval_int(dv0.arg1 - dv1.arg1)
+            if (opr == "*"):
+                dv0 = auxeval(tms[0], env)
+                dv1 = auxeval(tms[1], env)
+                return dval_int(dv0.arg1 * dv1.arg1)
+            if (opr == "/"):
+                dv0 = auxeval(tms[0], env)
+                dv1 = auxeval(tms[1], env)
+                return dval_int(dv0.arg1 // dv1.arg1)
+            raise TypeError(tm0) # HX: unrecognized operator
         raise TypeError(tm0) # HX: should be deadcode!
     return auxeval(tm0, [])
 ############################################################
 ############################################################
 print("evaluate(TMint(0)) =", term_evaluate(TM1int(0)))
 print("evaluate(TMbtf(True)) =", term_evaluate(TM1btf(True)))
+############################################################
+def TM1dbl():
+    x = TM1var("x")
+    return TM1lam("x", TM1opr("+", [x, x]))
+def TM1dbl():
+    x = TM1var("x")
+    return TM1lam("x", TM1opr("+", [x, x]))
+print("evaluate(TM1dbl(5)) =", term_evaluate(TM1app(TM1dbl(), TM1int(5))))
 ############################################################
 ############################################################
 # end of [HWXI/CS525-2024-Fall/lambdas_lambda1_PYT3_lambda1.py]
