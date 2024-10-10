@@ -1,6 +1,6 @@
 ############################################################
-# HX-2024-09-10:
-# A substitution-based reference
+# HX-2024-10-10:
+# A closured-based reference
 # implementation of lambad-calculus
 ############################################################
 # datatype term =
@@ -11,6 +11,7 @@
 # | TMbtf of (bool)
 # | TMopr of (strn, list(term))
 # | TMif0 of (term, term, term)
+# | TMfix of (strn, strn, term)
 ############################################################
 #
 TM0cst = 0
