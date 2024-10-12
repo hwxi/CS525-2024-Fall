@@ -196,7 +196,7 @@ class dval_lam:
         self.arg2 = arg2
         self.ctag = DV0lam
     def __str__(self):
-        return f"DVlam({self.arg1}, ...)"
+        return ("DVlam(" + str(self.arg1) + "..." + ")")
 # end-of-class(dval_lam)
 ############################################################
 class dval_fix:
@@ -205,7 +205,7 @@ class dval_fix:
         self.arg2 = arg2
         self.ctag = DV0fix
     def __str__(self):
-        return f"DVfix({self.arg1}, ...)"
+        return ("DVfix(" + str(self.arg1) + "..." + ")")
 # end-of-class(dval_fix)
 ############################################################
 def denv_search2opt(env, x00):
