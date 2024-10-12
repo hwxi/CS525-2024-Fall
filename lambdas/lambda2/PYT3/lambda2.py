@@ -13,6 +13,19 @@
 # | STfarg of (styp) // nonfun
 # | STfres of (styp) // nonfun
 ############################################################
+#
+ST0bas = 0
+ST0tup = 1
+ST0fun = 2
+#
+ST0none = 3
+#
+ST0pfst = 4
+ST0pfst = 5
+ST0farg = 6
+ST0fres = 7
+#
+############################################################
 # datatype dexp =
 # | DEvar of strn
 # | DElam of (strn, dexp)
@@ -45,9 +58,17 @@ DE0opr = 6
 DE0fix = 7
 DE0if0 = 8
 #
+DE0nil0 = 9
+DE0cons = 10
+DE0pfst = 11
+DE0psnd = 12
+#
+DE0cast = 13 # for type casting
+#
 ############################################################
 class dexp:
     ctag = -1
+    styp = None
 # end-of-class(dexp)
 ############################################################
 class dexp_cst(dexp):
