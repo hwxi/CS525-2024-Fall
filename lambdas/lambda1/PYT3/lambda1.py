@@ -24,7 +24,8 @@ TM0int = 4
 TM0btf = 5
 #
 TM0opr = 6
-TM0if0 = 7
+TM0fix = 7
+TM0if0 = 8
 #
 ############################################################
 class term:
@@ -91,6 +92,17 @@ class term_opr(term):
         # return ("TMopr(" + str(self.arg1) + "," + str(self.arg2) + ")")
 # end-of-class(term_opr(term))
 ############################################################
+class term_fix(term):
+    def __init__(self, arg1, arg2, arg3):
+        self.arg1 = arg1
+        self.arg2 = arg2
+        self.arg3 = arg3
+        self.ctag = TM0fix
+    def __str__(self):
+        return f"TMfix({self.arg1}, {self.arg2}, {self.arg3})"
+        # return ("TMfix(" + str(self.arg1) + "," + str(self.arg2) + str(self.arg3) + ")")
+# end-of-class(term_fix(term))
+############################################################
 class term_if0(term):
     def __init__(self, arg1, arg2, arg3):
         self.arg1 = arg1
@@ -117,8 +129,12 @@ def TM1int(i00: int) -> term:
 def TM1btf(b00: bool) -> term:
     return term_btf(b00)
 #
-def TM1opr(opr, tms):
+def TM1opr(opr, tms: list[term]) -> term:
     return term_opr(opr, tms)
+#
+def TM1fix(f00: str, x01: str, tm1: term) -> term:
+    return term_fix(f00, x01, tm1)
+#
 def TM1if0(tm1: term, tm2: term, tm3: term) -> term:
     return term_if0(tm1, tm2, tm3)
 #
@@ -214,6 +230,8 @@ def term_evaluate(tm0):
             return denv_search2opt(env, tm0.arg1)
         if tm0.ctag == TM0lam:
             return dval_lam(tm0, env.copy())
+        if tm0.ctag == TM0fix:
+            return dval_fix(tm0, env.copy())
         if tm0.ctag == TM0app:
             dv1 = auxeval(tm0.arg1, env)
             dv2 = auxeval(tm0.arg2, env)
@@ -223,6 +241,13 @@ def term_evaluate(tm0):
                 tmb = tma.arg2
                 env = dv1.arg2
                 return auxeval(tmb, env+[(x01, dv2)])
+            if dv1.ctag == DV0fix:
+                tma = dv1.arg1
+                f00 = tma.arg1
+                x01 = tma.arg2
+                tmb = tma.arg3
+                env = dv1.arg2
+                return auxeval(tmb, env+[(f00, dv1), (x01, dv2)])
             raise TypeError(tm0) # HX: should be deadcode!
         if (tm0.ctag == TM0opr):
             opr = tm0.arg1
@@ -268,6 +293,9 @@ def term_evaluate(tm0):
                 dv1 = auxeval(tms[1], env)
                 return dval_int(dv0.arg1 // dv1.arg1)
             raise TypeError(tm0) # HX: unrecognized operator
+        if (tm0.ctag == TM0if0):
+            dv1 = auxeval(tm0.arg1, env)
+            return auxeval(tm0.arg2, env) if (dv1.arg1) else auxeval(tm0.arg3, env)
         raise TypeError(tm0) # HX: should be deadcode!
     return auxeval(tm0, [])
 ############################################################
@@ -275,13 +303,40 @@ def term_evaluate(tm0):
 print("evaluate(TMint(0)) =", term_evaluate(TM1int(0)))
 print("evaluate(TMbtf(True)) =", term_evaluate(TM1btf(True)))
 ############################################################
+def TM1lt(x, y):
+    return TM1opr("<", [x, y])
+def TM1gt(x, y):
+    return TM1opr(">", [x, y])
+def TM1eq(x, y):
+    return TM1opr("=", [x, y])
+def TM1lte(x, y):
+    return TM1opr("<=", [x, y])
+def TM1gte(x, y):
+    return TM1opr(">=", [x, y])
+def TM1neq(x, y):
+    return TM1opr("!=", [x, y])
+############################################################
+def TM1add(x, y):
+    return TM1opr("+", [x, y])
+def TM1sub(x, y):
+    return TM1opr("-", [x, y])
+def TM1mul(x, y):
+    return TM1opr("*", [x, y])
+def TM1div(x, y):
+    return TM1opr("/", [x, y])
+############################################################
 def TM1dbl():
     x = TM1var("x")
-    return TM1lam("x", TM1opr("+", [x, x]))
-def TM1dbl():
-    x = TM1var("x")
-    return TM1lam("x", TM1opr("+", [x, x]))
+    return TM1lam("x", TM1add(x, x))
 print("evaluate(TM1dbl(5)) =", term_evaluate(TM1app(TM1dbl(), TM1int(5))))
+############################################################
+def TM1fact():
+    i0 = TM1int(0)
+    i1 = TM1int(1)
+    xf = TM1var("f")
+    xn = TM1var("n")
+    return TM1fix("f", "n", TM1if0(TM1gt(xn, i0), TM1mul(xn, TM1app(xf, TM1sub(xn, i1))), i1))
+print("evaluate(TM1fact(5)) =", term_evaluate(TM1app(TM1fact(), TM1int(5))))
 ############################################################
 ############################################################
 # end of [HWXI/CS525-2024-Fall/lambdas_lambda1_PYT3_lambda1.py]
