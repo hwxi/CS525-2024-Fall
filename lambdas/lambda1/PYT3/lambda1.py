@@ -117,6 +117,7 @@ class term_if0(term):
 #
 def TM1cst(c00):
     return term_cst(c00)
+#
 def TM1var(x00):
     return term_var(x00)
 def TM1lam(x00, tm1):
@@ -174,7 +175,6 @@ class dval:
 # end-of-class(dval)
 ############################################################
 class dval_int:
-    ctag = -1
     def __init__(self, arg1):
         self.arg1 = arg1
         self.ctag = DV0int
@@ -183,7 +183,6 @@ class dval_int:
 # end-of-class(dval_int)
 ############################################################
 class dval_btf:
-    ctag = -1
     def __init__(self, arg1):
         self.arg1 = arg1
         self.ctag = DV0btf
@@ -192,7 +191,6 @@ class dval_btf:
 # end-of-class(dval_btf)
 ############################################################
 class dval_lam:
-    ctag = -1
     def __init__(self, arg1, arg2):
         self.arg1 = arg1
         self.arg2 = arg2
@@ -202,7 +200,6 @@ class dval_lam:
 # end-of-class(dval_lam)
 ############################################################
 class dval_fix:
-    ctag = -1
     def __init__(self, arg1, arg2):
         self.arg1 = arg1
         self.arg2 = arg2
@@ -295,7 +292,8 @@ def term_evaluate(tm0):
             raise TypeError(tm0) # HX: unrecognized operator
         if (tm0.ctag == TM0if0):
             dv1 = auxeval(tm0.arg1, env)
-            return auxeval(tm0.arg2, env) if (dv1.arg1) else auxeval(tm0.arg3, env)
+            return auxeval(tm0.arg2, env) \
+                if (dv1.arg1) else auxeval(tm0.arg3, env)
         raise TypeError(tm0) # HX: should be deadcode!
     return auxeval(tm0, [])
 ############################################################
