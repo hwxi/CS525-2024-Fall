@@ -50,6 +50,8 @@ ST0fres = 7
 # | DElam2 of (strn, styp, dexp)
 # | DEfix2 of (strn, strn, styp, dexp, styp)
 ############################################################
+# | DEcast of (dexp, styp) # for type casting
+############################################################
 #
 DE0cst = 0
 #
