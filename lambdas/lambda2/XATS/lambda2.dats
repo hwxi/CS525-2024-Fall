@@ -49,17 +49,38 @@ val () = prints
 //
 datatype styp =
 //
+(*
+STbas"int"
+STbas"bool"
+*)
 | STbas of (snam)
+//
+(*
+STtup(T1, T2)
+*)
 | STtup of (styp, styp)
+(*
+STfun(T1, T2): T1 -> T2
+*)
 | STfun of (styp, styp)
+//
+(*
+| STref of (ref(optn(styp)))
+*)
 //
 (*
 HX-2024-10-01:
 these are for error handling:
 *)
 //
+(*
+HX: error nodes
+*)
 | STnone of (   ) // none
 //
+(*
+HX: for shape error
+*)
 | STpfst of (styp) // nontup
 | STpsnd of (styp) // nontup
 | STfarg of (styp) // nonfun
@@ -75,6 +96,45 @@ val STstrn = STbas"strn"
 val STunit = STbas"unit"
 //
 (* ****** ****** *)
+(* ****** ****** *)
+//
+fun
+styp_subeq
+(st1: styp
+,st2: styp): bool =
+(
+case+ st1 of
+//
+|STbas(nm1) =>
+(
+case+ st2 of
+|
+STbas(nm2) =>
+(nm1 = nm2) | _ => false)
+//
+|STtup(st11, st12) =>
+(
+case+ st2 of
+|STtup(st21, st22) =>
+if
+styp_subeq(st11, st21)
+then
+styp_subeq(st12, st22) else false
+|_(*non-STtup(...)*) => (  false  ))
+//
+|STfun(st11, st12) =>
+(
+case+ st2 of
+|STfun(st21, st22) =>
+if
+styp_subeq(st21, st21)
+then
+styp_subeq(st12, st22) else false
+|_(*non-STfun(...)*) => (  false  ))
+//
+|_(*else: error-nodes*) => (  false  )
+)
+//
 (* ****** ****** *)
 //
 datatype dexp =
@@ -402,7 +462,12 @@ STfun(_, stb) => stb
 _(*non-STfun*) => STfres(st1)
 )
 //
-val de2 = DEcast(de2, sta)
+val de2 =
+(
+if
+styp_subeq
+(styp(de2), sta)
+then de2 else DEcast(de2, sta))
 //
 in//let
 (
@@ -515,7 +580,7 @@ in//let
 DElam("x",
 STfun(X, STfun(Y, Z)), // X -> (Y -> Z)
 DElam("y", STfun(X, Y), // X -> Y
-DElam("z", Z, DEapp(DEapp(x, z), DEapp(y, z)))))
+DElam("z", X, DEapp(DEapp(x, z), DEapp(y, z)))))
 end//end//end-of-[val(K0)]
 //
 val S1 = dexp_tpcheck(S0)

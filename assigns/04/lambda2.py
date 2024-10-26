@@ -52,6 +52,8 @@ ST0fres = 7
 ############################################################
 # | DEcast of (dexp, styp) # for type casting
 ############################################################
+# | DEanno of (dexp, styp) # for type annotation
+############################################################
 #
 DE0cst = 0
 #
@@ -72,6 +74,8 @@ DE0pfst = 11
 DE0psnd = 12
 #
 DE0cast = 13 # for type casting
+#
+DE0anno = 14 # for type annotation
 #
 ############################################################
 class dexp:
