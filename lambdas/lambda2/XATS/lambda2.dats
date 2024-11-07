@@ -127,7 +127,7 @@ styp_subeq(st12, st22) else false
 case+ st2 of
 |STfun(st21, st22) =>
 if
-styp_subeq(st21, st21)
+styp_subeq(st21, st11)
 then
 styp_subeq(st12, st22) else false
 |_(*non-STfun(...)*) => (  false  ))
