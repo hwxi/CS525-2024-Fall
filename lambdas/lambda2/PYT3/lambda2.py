@@ -7,8 +7,8 @@
 ############################################################
 # datatype styp =
 # | STbas of (snam)
-# | STtup of (styp, styp)
 # | STfun of (styp, styp)
+# | STtup of (styp, styp)
 # | STnone of (   ) // none
 # | STpfst of (styp) // nontup
 # | STpsnd of (styp) // nontup
@@ -28,6 +28,44 @@ ST0pfst = 5
 ST0farg = 6
 ST0fres = 7
 #
+############################################################
+class styp:
+    ctag = -1
+# end-of-class(styp)
+############################################################
+class styp_bas(styp):
+    def __init__(self, arg1):
+        self.arg1 = arg1
+        self.ctag = ST0bas
+    def __str__(self):
+        return ("STbas(" + self.arg1 + ")")
+# end-of-class(styp_bas(styp))
+############################################################
+class styp_fun(styp):
+    def __init__(self, arg1, arg2):
+        self.arg1 = arg1
+        self.arg2 = arg2
+        self.ctag = ST0fun
+    def __str__(self):
+        return ("STfun(" + str(self.arg1) + str(self.arg2) + ")")
+# end-of-class(styp_fun(styp))
+############################################################
+class styp_tup(styp):
+    def __init__(self, arg1, arg2):
+        self.arg1 = arg1
+        self.arg2 = arg2
+        self.ctag = ST0tup
+    def __str__(self):
+        return ("STtup(" + str(self.arg1) + str(self.arg2) + ")")
+# end-of-class(styp_tup(styp))
+############################################################
+############################################################
+def ST1int0():
+    return styp_bas("int")
+def ST1bool():
+    return styp_bas("bool")
+def ST1strn():
+    return styp_bas("strn")
 ############################################################
 ############################################################
 # datatype dexp =
@@ -92,7 +130,7 @@ class dexp_cst(dexp):
         self.ctag = DE0cst
     def __str__(self):
         return ("DEcst(" + self.arg1 + ")")
-# end-of-class(dexp_var(dexp))
+# end-of-class(dexp_cst(dexp))
 ############################################################
 class dexp_var(dexp):
     def __init__(self, arg1):
@@ -279,6 +317,8 @@ def DE1cast(de1, st2):
 # | DVbtf of bool
 # | DVlam of (dexp, denv)
 # | DVfix of (dexp, denv)
+# | DVnil0 of ((* void *))
+# | DVcons of (dval, dval)
 ############################################################
 DV0int = 0
 DV0btf = 1
@@ -410,6 +450,12 @@ def dexp_evaluate(de0):
             dv1 = auxeval(de0.arg1, env)
             return auxeval(de0.arg2, env) \
                 if (dv1.arg1) else auxeval(de0.arg3, env)
+        if (de0.ctag == DE0lam2):
+            de0 = DE1lam(de0.arg1, de0.arg3)
+            return dval_lam(de0, env.copy())
+        if (de0.ctag == DE0fix2):
+            de0 = DE1fix(de0.arg1, de0.arg2, de0.arg4)
+            return dval_fix(de0, env.copy())
         raise TypeError(de0) # HX: should be deadcode!
     return auxeval(de0, [])
 ############################################################
@@ -442,7 +488,7 @@ def DE1div(x, y):
 ############################################################
 def DE1dbl():
     x = DE1var("x")
-    return DE1lam("x", DE1add(x, x))
+    return DE1lam2("x", ST1int0(), DE1add(x, x))
 print("evaluate(DE1dbl(5)) =", dexp_evaluate(DE1app(DE1dbl(), DE1int(5))))
 ############################################################
 def DE1fact():
@@ -450,8 +496,22 @@ def DE1fact():
     i1 = DE1int(1)
     xf = DE1var("f")
     xn = DE1var("n")
-    return DE1fix("f", "n", DE1if0(DE1gt(xn, i0), DE1mul(xn, DE1app(xf, DE1sub(xn, i1))), i1))
+    return DE1fix2("f", "n", ST1int0(), DE1if0(DE1gt(xn, i0), DE1mul(xn, DE1app(xf, DE1sub(xn, i1))), i1), ST1int0())
 print("evaluate(DE1fact(5)) =", dexp_evaluate(DE1app(DE1fact(), DE1int(5))))
+############################################################
+def DE1info(de0, st1):
+    de0.styp = st1; return de0
+############################################################
+def dexp_tpcheck(de0):
+    return dexp_tpcheck_env(de0, [])
+def dexp_tpcheck_env(de0, env):
+    if de0.ctag == DE0int:
+        return DE1info(de0, ST1int0())
+    if de0.ctag == DE0btf:
+        return DE1info(de0, ST1bool())
+    if de0.ctag == DE0str:
+        return DE1info(de0, ST1strn())
+    raise TypeError(de0) # HX: should be deadcode!
 ############################################################
 ############################################################
 # end of [HWXI/CS525-2024-Fall/lambdas_lambda2_PYT3_lambda2.py]
