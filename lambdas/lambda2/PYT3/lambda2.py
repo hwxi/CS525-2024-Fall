@@ -31,6 +31,10 @@ ST0fres = 7
 ############################################################
 class styp:
     ctag = -1
+    def __str__(self):
+        return "[styp]"
+    def __eq__(self, other):
+        return False
 # end-of-class(styp)
 ############################################################
 class styp_bas(styp):
@@ -39,6 +43,11 @@ class styp_bas(styp):
         self.ctag = ST0bas
     def __str__(self):
         return ("STbas(" + self.arg1 + ")")
+    def __eq__(self, other):
+        if (self.ctag != other.ctag):
+            return False
+        else:
+            return self.arg1 == other.arg1
 # end-of-class(styp_bas(styp))
 ############################################################
 class styp_fun(styp):
@@ -48,6 +57,11 @@ class styp_fun(styp):
         self.ctag = ST0fun
     def __str__(self):
         return ("STfun(" + str(self.arg1) + str(self.arg2) + ")")
+    def __eq__(self, other):
+        if (self.ctag != other.ctag):
+            return False
+        else:
+            return self.arg1 == other.arg1 and self.arg2 == other.arg2
 # end-of-class(styp_fun(styp))
 ############################################################
 class styp_tup(styp):
@@ -57,6 +71,11 @@ class styp_tup(styp):
         self.ctag = ST0tup
     def __str__(self):
         return ("STtup(" + str(self.arg1) + str(self.arg2) + ")")
+    def __eq__(self, other):
+        if (self.ctag != other.ctag):
+            return False
+        else:
+            return self.arg1 == other.arg1 and self.arg2 == other.arg2
 # end-of-class(styp_tup(styp))
 ############################################################
 ############################################################
@@ -501,6 +520,12 @@ print("evaluate(DE1fact(5)) =", dexp_evaluate(DE1app(DE1fact(), DE1int(5))))
 ############################################################
 def DE1info(de0, st1):
     de0.styp = st1; return de0
+############################################################
+def dexp_tpcast(de0, st0):
+    if de0.styp == st0:
+        return de0
+    else:
+        return DE1cast(de0, st0)
 ############################################################
 def dexp_tpcheck(de0):
     return dexp_tpcheck_env(de0, [])

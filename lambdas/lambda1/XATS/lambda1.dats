@@ -200,7 +200,7 @@ val () =
  prints("DENV("))
 //
 val () =
-list_iforitm_f2un
+list_iforitm$f2un
 (
 denv,
 lam(i, x) => (
@@ -342,7 +342,7 @@ TMopr(opr, tms) =>
 term$opr_evaluate(opr, dvs))
 where
 {
-val dvs = list_map_f1un
+val dvs = list_map$f1un
 (tms, lam(tmx) => auxeval(tmx, env))
 }
 //
